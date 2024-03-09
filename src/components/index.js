@@ -1,0 +1,9 @@
+export { default as Navigation } from "./Navigation";
+export { default as Footer } from "./Footer";
+export { default as Home } from "./Home";
+export { default as Profile } from "./Profile";
+export { default as Login } from "./Login";
+export { default as Signup } from "./Signup";
+export { default as Lectures } from "./Lectures/Lectures";
+export { default as Posts } from "./Lectures/Posts";
+export { default as Post } from "./Lectures/Post";

@@ -36,10 +36,10 @@ function App() {
       <Navigation />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/lectures" element={<Lectures />}>
+        <Route path="/profile/" element={<Profile />} />
+        <Route path="/login/" element={<Login />} />
+        <Route path="/signup/" element={<Signup />} />
+        <Route path="/lectures/" element={<Lectures />}>
           <Route index element={<Posts />} />
           <Route path=":postSlug" element={<Post />} />
         </Route>

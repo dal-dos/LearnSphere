@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom'
 
 function Login() {
+
     const initialValues = {
         username: "",
         password: "",
-        confirmPassword: "",
     };
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
@@ -18,8 +18,9 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setFormErrors(validate(formValues));
         setIsSubmit(true);
+        
+        //updateProfileId(1);//if form vals are all correct profile id here
     };
 
     useEffect(() => {
@@ -28,31 +29,13 @@ function Login() {
             console.log(formValues);
         }
     }, [formErrors, formValues, isSubmit]);
-    const validate = (values) => {
-        const errors = {};
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-        if (!values.username) {
-            errors.username = "Username is required!";
-        }
-        if (!values.password) {
-            errors.password = "Password is required";
-        } else if (values.password.length < 4) {
-            errors.password = "Password must be more than 4 characters";
-        } else if (values.password.length > 10) {
-            errors.password = "Password cannot exceed more than 10 characters";
-        }
-        if (values.password !== values.confirmPassword) {
-            errors.confirmPassword = "Those passwords didn’t match. Try again.";
-        }
-        return errors;
-    };
 
     return (
         <>
-            <div className="bgImg"></div>
-            <div className="container">
+            <div></div>
+            <div>
                 {Object.keys(formErrors).length === 0 && isSubmit ? (
-                    <div className="ui message success">
+                    <div>
                         Signed in successfully
                     </div>
                 ) : (
@@ -61,8 +44,8 @@ function Login() {
 
                 <form onSubmit={handleSubmit}>
                     <h1>Login</h1>
-                    <div className="ui divider"></div>
-                    <div className="ui form">
+                    <div></div>
+                    <div>
                         <div className="field">
                             <label>Username</label>
                             <input
@@ -85,7 +68,7 @@ function Login() {
                             />
                         </div>
                         <p>{formErrors.password}</p>
-                        <button className="fluid ui button blue">Submit</button>
+                        <button>Submit</button>
                     </div>
                 </form>
                 <div className="text">

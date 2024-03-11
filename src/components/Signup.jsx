@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom'
-
 function Signup() {
     const initialValues = {
         username: "",
         password: "",
         confirmPassword: "",
+        role: "student",
     };
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
@@ -20,6 +20,8 @@ function Signup() {
         e.preventDefault();
         setFormErrors(validate(formValues));
         setIsSubmit(true);
+
+
     };
 
     useEffect(() => {
@@ -49,8 +51,8 @@ function Signup() {
 
     return (
         <>
-            <div className="bgImg"></div>
-            <div className="container">
+            <div></div>
+            <div>
                 {Object.keys(formErrors).length === 0 && isSubmit ? (
                     <div className="ui message success">
                         Signed in successfully
@@ -62,7 +64,14 @@ function Signup() {
                 <form onSubmit={handleSubmit}>
                     <h1>Sign Up</h1>
                     <div className="ui divider"></div>
-                    <div className="ui form">
+                    <div className="field">
+                        <select>
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div>
                         <div className="field">
                             <label>Username</label>
                             <input
@@ -96,11 +105,13 @@ function Signup() {
                             />
                         </div>
                         <p>{formErrors.confirmPassword}</p>
-                        <button className="fluid ui button blue">Submit</button>
+
+                        <button>Submit</button>
                     </div>
+                    
                 </form>
                 <div className="text">
-                    Already have an account? <Link to={`/login/`}>Login</Link>
+                    Already have an account? <span>Log in</span>
                 </div>
             </div>{" "}
         </>

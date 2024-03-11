@@ -1,10 +1,7 @@
-// Home.js
 
-import React from "react";
-
-function Home() {
+function Dashboard() {
   return (
-    <div className="home">
+    <div>
       <div className="container">
         <div className="row align-items-center my-5">
           <div className="col-lg-7">
@@ -26,4 +23,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Dashboard;

@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useParams } from "react-router";
 
 function Profile() {
+  let { postSlug } = useParams();
+
+  useEffect(() => {
+    // Fetch post using the postSlug
+  }, [postSlug]);
+
   return (
     <div className="Profile">
       <div class="container">
@@ -15,7 +22,7 @@ function Profile() {
           <div class="col-lg-5">
             <h1 class="font-weight-light">Profile</h1>
             <p>
-              abc
+              {postSlug}
             </p>
           </div>
         </div>

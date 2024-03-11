@@ -1,0 +1,73 @@
+/* Reset some basic elements */
+body, h1, h2, h3, p, a {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Navigation Styles */
+nav {
+  background-color: #343a40;
+  color: white;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav .nav-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+  gap: 1rem;
+}
+
+nav ul li a {
+  color: white;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #007bff;
+}
+
+/* Main Content Styles */
+.container {
+  padding: 2rem;
+}
+
+.card {
+  background-color: #fff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Footer Styles */
+footer {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  text-align: center;
+  padding: 1rem 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}

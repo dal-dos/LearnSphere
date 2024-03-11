@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom'
-
+import './AuthForm.css';
 function Login() {
 
     const initialValues = {
@@ -33,16 +33,12 @@ function Login() {
     return (
         <>
             <div></div>
-            <div>
-                {Object.keys(formErrors).length === 0 && isSubmit ? (
-                    <div>
-                        Signed in successfully
-                    </div>
-                ) : (
-                    console.log("Entered Details", formValues)
-                )}
+            <div className="auth-card">
+            {Object.keys(formErrors).length === 0 && isSubmit && (
+                <div className="ui message success">Signed in successfully</div>
+            )}
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="auth-form">
                     <h1>Login</h1>
                     <div></div>
                     <div>

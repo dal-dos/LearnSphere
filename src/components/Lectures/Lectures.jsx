@@ -1,5 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+import './Lectures.css'
 
 function Lectures() {
   return (

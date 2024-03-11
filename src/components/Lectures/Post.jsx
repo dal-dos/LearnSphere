@@ -1,27 +1,21 @@
+// Post.tsx
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
+import './Lectures.css'
 
 function Post() {
   let { postSlug } = useParams();
 
   useEffect(() => {
-    // Fetch post using the postSlug
+    // Placeholder for fetch post logic
   }, [postSlug]);
 
   return (
     <div className="home">
-      <div class="container">
-        <h1 className="mt-5">Title</h1>
-        <h6 className="mb-5"> {postSlug}</h6>
-        <p>
-          abds
-        </p>
-        <p>
-          abc
-        </p>
-        <p>
-          abc
-        </p>
+      <div className="container">
+        <h1 className="mt-5">Post Title</h1>
+        <h6 className="mb-5">Slug: {postSlug}</h6>
+        <p>Post content placeholder</p>
       </div>
     </div>
   );

@@ -1,22 +1,41 @@
+import './Dashboard.css'
+
 
 function Dashboard() {
   return (
-    <div>
-      <div className="container">
-        <div className="row align-items-center my-5">
-          <div className="col-lg-7">
-            <img
-              className="img-fluid rounded mb-4 mb-lg-0"
-              src="http://placehold.it/900x400"
-              alt="Placeholder"
-            />
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h1>Welcome to LearnSphere, [Student Name]!</h1>
+        <p>Explore a world of knowledge and enhance your learning experience with LearnSphere.</p>
+      </div>
+      <div className="dashboard-main">
+        <div className="dashboard-card">
+          <h2>Your Courses</h2>
+          <p>Resume learning where you left off.</p>
+          <button>Go to Courses</button>
+        </div>
+        <div className="dashboard-card">
+          <h2>Completed Courses</h2>
+          <p>View the courses you've completed and access your certificates.</p>
+          <button>View Certificates</button>
+        </div>
+        <div className="dashboard-card calendar-deadlines-panel">
+          <h2>Calendar & Deadlines</h2>
+          <div className="calendar-mini">[Mini Calendar]</div>
+          <div className="upcoming-deadlines">
+            <h3>Upcoming Deadlines</h3>
+            <p>[List of deadlines]</p>
           </div>
-          <div className="col-lg-5">
-            <h1 className="font-weight-light">Welcome to LearnSphere</h1>
-            <p>
-              Explore a world of knowledge and enhance your learning experience with LearnSphere. We provide a variety of courses and resources to help you achieve your educational goals. Start your learning journey with us today!
-            </p>
-          </div>
+        </div>
+        <div className="dashboard-card">
+          <h2>New Resources</h2>
+          <p>Discover new courses, videos, and articles to further your education.</p>
+          <button>Explore Resources</button>
+        </div>
+        <div className="dashboard-card">
+          <h2>Progress Tracking</h2>
+          <p>View your learning progress across all courses.</p>
+          <button>View Progress</button>
         </div>
       </div>
     </div>

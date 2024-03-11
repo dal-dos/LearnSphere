@@ -1,0 +1,49 @@
+.dashboard-main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.dashboard-card {
+    flex: 1;
+    min-width: 250px; /* Ensures cards have a minimum width */
+    max-width: calc(33% - 20px); /* Adjust based on your layout preference */
+    margin: 10px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.calendar-deadlines-panel {
+    flex-direction: column;
+    max-width: 100%; /* Allows the panel to span the full width at the end of the row */
+}
+
+.calendar-mini {
+    background-color: #e9ecef;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: left;
+    width: 100%;
+}
+
+.upcoming-deadlines h3 {
+    margin-top: 0;
+}
+
+@media (max-width: 768px) {
+    .dashboard-main {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .dashboard-card,
+    .calendar-deadlines-panel {
+        max-width: 90%;
+    }
+}

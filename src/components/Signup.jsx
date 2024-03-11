@@ -52,16 +52,12 @@ function Signup() {
     return (
         <>
             <div></div>
-            <div>
-                {Object.keys(formErrors).length === 0 && isSubmit ? (
-                    <div className="ui message success">
-                        Signed in successfully
-                    </div>
-                ) : (
-                    console.log("Entered Details", formValues)
-                )}
+            <div className="auth-card">
+            {Object.keys(formErrors).length === 0 && isSubmit && (
+                <div className="ui message success">Signed up successfully</div>
+            )}
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="auth-form">
                     <h1>Sign Up</h1>
                     <div className="ui divider"></div>
                     <div className="field">

@@ -1,0 +1,38 @@
+.hero {
+    color: black;
+    text-align: center;
+    padding: 100px 20px;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .main-hero {
+    background-image: url('./assets/main-hero.jpg');
+  }
+  
+  .featured-courses, .testimonials, .cta-signup {
+    padding: 60px 20px; 
+  }
+  
+  .featured-courses {
+    background-color: #f0f2f5; 
+    color: #333; 
+  }
+  
+  .testimonials {
+    background-image: url('./assets/testimonials.jpg');
+  }
+  
+  .cta-signup {
+    background-color: #007bff; 
+  }
+  
+  .courses-list div {
+    background-color: #ffffff; 
+    margin: 10px 0;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  

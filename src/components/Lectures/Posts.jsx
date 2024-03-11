@@ -1,45 +1,44 @@
+// Posts.tsx
 import React from "react";
 import { Link } from "react-router-dom";
+import './Lectures.css'
 
 function Posts() {
   const posts = [
     {
       id: 1,
-      title: "Introduction to React",
-      author: "John Doe",
-      imageUrl: "http://placehold.it/400x200",
-      content: "this is a lecture about react",
+      title: "Full-Stack Web Development with React and Node.js",
+      author: "Jane Doe",
+      imageUrl: "https://via.placeholder.com/400x200",
+      content: "Dive into full-stack development with this comprehensive course on React for frontend and Node.js for the backend.",
     },
     {
       id: 2,
-      title: "Introduction to Websystems",
-      author: "Jerry Smith",
-      imageUrl: "http://placehold.it/400x200",
-      content: "this is a lecture about web",
-    }
+      title: "Mastering Cloud Computing with AWS",
+      author: "Alex Johnson",
+      imageUrl: "https://via.placeholder.com/400x200",
+      content: "Learn how to deploy scalable applications and manage your infrastructure with AWS cloud services.",
+    },
     // Add more posts as needed
   ];
+
   return (
     <div className="lecture-posts">
       <div className="container">
         {posts.map((post) => (
-          <Link to={`/lectures/${post.id}`}>
-          <div key={post.id} className="row align-items-center my-5">
-            <div className="col-lg-5">
+          <Link to={`/lectures/${post.id}`} key={post.id} className="post-link">
+            <div className="post-card">
               <img
-                className="img-fluid rounded mb-4 mb-lg-0"
+                className="post-image"
                 src={post.imageUrl}
                 alt={post.title}
               />
+              <div className="post-content">
+                <h2>{post.title}</h2>
+                <p><strong>Author:</strong> {post.author}</p>
+                <p>{post.content}</p>
+              </div>
             </div>
-            <div className="col-lg-7">
-              <h2 className="font-weight-light">{post.title}</h2>
-              <p>
-                <strong>Author:</strong> {post.author}
-              </p>
-              <p>{post.content}</p>
-            </div>
-          </div>
           </Link>
         ))}
       </div>

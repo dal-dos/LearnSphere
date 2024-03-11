@@ -1,0 +1,28 @@
+.post-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .post-card {
+    display: flex;
+    margin-bottom: 2rem;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .post-image {
+    max-width: 40%;
+    object-fit: cover;
+  }
+  
+  .post-content {
+    padding: 20px;
+    flex: 1;
+  }
+  
+  h2 {
+    margin-top: 0;
+  }
+  

@@ -19,8 +19,16 @@ function Login() {
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsSubmit(true);
+
+        //submit goes here
         
-        //updateProfileId(1);//if form vals are all correct profile id here
+        //https://auth-service-dot-project-416223.uw.r.appspot.com/
+
+        //fetch get post data etc.
+        //axios  alternate fetch.
+        //post request (for login)
+
+        //to check if acc exists, (not done yet). signup auth service will respond to react. object will be recieved to react, true or false based on success and message to display.
     };
 
     useEffect(() => {

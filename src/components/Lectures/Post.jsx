@@ -3,7 +3,8 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import './Lectures.css'
 
-function Post() {
+function Post({objectPost}) {
+
   let { postSlug } = useParams();
 
   useEffect(() => {

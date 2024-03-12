@@ -5,7 +5,7 @@ import './Lectures.css'
 function Lectures() {
   return (
     <div className="home">
-      <div class="container">
+      <div className="container">
         <Outlet />
       </div>
     </div>

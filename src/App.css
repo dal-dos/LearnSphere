@@ -3,17 +3,59 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  background-color: #e9ecef; /* Smooth and modern background color */
+  background-color: #121212; /* Smooth and modern background color */
   color: #212529; /* Improved readability */
   line-height: 1.6;
   font-size: 1rem;
 }
 
+p {
+  color: #ffffff;
+}
+h1 {
+  color: #ffffff;
+}
+h2 {
+  color: #ffffff;
+}
+h3 {
+  color: #ffffff;
+}
+h4 {
+  color: #ffffff;
+}
+h5 {
+  color: #ffffff;
+}
+h6 {
+  color: #ffffff;
+}
+label {
+  color: #ffffff;
+}
+input {
+  background-color: #343a40;
+  color: #ffffff;
+}
+textarea {
+  background-color: #343a40;
+  color: #ffffff;
+}
+div{
+  color: #ffffff;
+}
+a{
+  color: #ffffff;
+}
+Link{
+  color: #ffffff;
+}
 .container {
   max-width: 1200px;
   margin: 20px auto;
   padding: 20px;
-  background-color: #fff; /* Crisp white for content */
+  background-color: #282828; /* Crisp white for content */
+  color: #ffffff;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* More pronounced shadow for depth */
   border-radius: 8px; /* Softened edges */
 }
@@ -71,7 +113,7 @@ body {
 a:focus,
 button:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Accessible focus state */
+  box-shadow: 0 0 0 3px #007bff80; /* Accessible focus state */
 }
 
 /* Responsive Layout Adjustments */

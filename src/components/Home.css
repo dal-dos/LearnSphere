@@ -6,6 +6,7 @@
     background-position: center;
   }
   
+  
   .main-hero {
     background-image: url('./assets/main-hero.jpg');
   }
@@ -15,7 +16,7 @@
   }
   
   .featured-courses {
-    background-color: #f0f2f5; 
+    background-color: #27437e; 
     color: #333; 
   }
   
@@ -28,7 +29,7 @@
   }
   
   .courses-list div {
-    background-color: #ffffff; 
+    background-color: #535C91; 
     margin: 10px 0;
     padding: 20px;
     border-radius: 5px;

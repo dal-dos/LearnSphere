@@ -1,6 +1,7 @@
 // Home.tsx
 import React from "react";
-import "./Home.css"; // Ensure CSS is properly linked
+import "./Home.css";// Ensure CSS is properly linked
+import { Link } from 'react-router-dom' 
 
 function Home() {
   return (
@@ -10,7 +11,9 @@ function Home() {
         <div className="container">
           <h1>Welcome to LearnSphere</h1>
           <p>Explore a world of knowledge and enhance your learning experience with LearnSphere. We provide a variety of courses and resources to help you achieve your educational goals. Start your learning journey with us today!</p>
-          <button className="hero-cta">Explore Courses</button>
+          <Link to={`/lectures/`}>
+            <button className="hero-cta">Explore Courses</button>
+            </Link>
         </div>
       </section>
       
@@ -21,6 +24,7 @@ function Home() {
           <p>Jumpstart your learning with our most popular courses.</p>
           {/* Placeholders for actual course listings */}
           <div className="courses-list">
+            
             <div>Course 1</div>
             <div>Course 2</div>
             <div>Course 3</div>
@@ -42,7 +46,9 @@ function Home() {
         <div className="container">
           <h2>Join LearnSphere Today</h2>
           <p>Sign up now to start your learning journey with unlimited access to the best courses.</p>
+          <Link to={`/signup/`}>
           <button className="hero-cta">Sign Up</button>
+          </Link>
         </div>
       </section>
     </div>

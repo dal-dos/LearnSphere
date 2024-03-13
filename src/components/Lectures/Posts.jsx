@@ -50,7 +50,9 @@ function Posts() {
 
   return (
     <div className="lecture-posts">
+      
       <div className="container">
+        
         {tempPost.map((post) => (
           <Link to={`/lectures/${post.postId}`} key={post.postId} className="post-link">
             <div className="post-card">

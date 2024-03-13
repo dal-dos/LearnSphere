@@ -7,3 +7,4 @@ export { default as Signup } from "./Signup";
 export { default as Lectures } from "./Lectures/Lectures";
 export { default as Posts } from "./Lectures/Posts";
 export { default as Post } from "./Lectures/Post";
+export { default as PostLecture } from "./PostLecture";

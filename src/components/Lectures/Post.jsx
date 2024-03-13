@@ -18,6 +18,7 @@ function Post({objectPost}) {
         <h6 className="mb-5">Slug: {postSlug}</h6>
         <p>Post content placeholder</p>
       </div>
+      
     </div>
   );
 }

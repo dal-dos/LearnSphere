@@ -26,3 +26,19 @@
     margin-top: 0;
   }
   
+  .add-lecture-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff; /* Change color as needed */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-lecture-button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+  }

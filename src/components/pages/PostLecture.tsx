@@ -1,7 +1,7 @@
-// LectureSubmission.js
+// PostLecture.js
 import React, { useState } from "react";
 
-function LectureSubmission() {
+function PostLecture() {
   const [lectureData, setLectureData] = useState({
     title: "",
     image: "",
@@ -76,4 +76,4 @@ function LectureSubmission() {
   );
 }
 
-export default LectureSubmission;
+export default PostLecture;

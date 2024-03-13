@@ -4,6 +4,7 @@ export { default as Dashboard } from "./pages/Dashboard";
 export { default as Profile } from "./pages/Profile";
 export { default as Login } from "./pages/Login";
 export { default as Signup } from "./pages/Signup";
+export { default as PostLecture } from "./pages/PostLecture";
 export { default as Lectures } from "./pages/lecture_page/Lectures";
 export { default as Posts } from "./pages/lecture_page/Posts";
 export { default as Post } from "./pages/lecture_page/Post";

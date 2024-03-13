@@ -12,6 +12,7 @@
 .main-hero {
 	background-image: url("./assets/mainHero.jpg");
 }
+
 .home-title {
 	font-size: 3rem;
 	margin: 80px 0;
@@ -54,7 +55,7 @@
 }
 
 .featured-courses {
-	background-color: #f0f2f5;
+	background-color: #27437e;
 	color: #333;
 }
 
@@ -67,7 +68,7 @@
 }
 
 .courses-list div {
-	background-color: #ffffff;
+	background-color: #535C91;
 	margin: 10px 0;
 	padding: 20px;
 	border-radius: 5px;

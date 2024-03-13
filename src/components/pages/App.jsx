@@ -9,6 +9,7 @@ import {
 	Lectures,
 	Posts,
 	Post,
+	PostLecture,
 } from "../index.js";
 import {
 	AuthProvider,
@@ -32,6 +33,7 @@ function App() {
 							</Route>
 							<Route path="/login" element={<Login />} />
 							<Route path="/signup" element={<Signup />} />
+							<Route path="/post-lecture/" element={<PostLecture />}/>
 							<Route path="/lectures" element={<Lectures />}>
 								<Route index element={<Posts />} />
 								<Route path=":postSlug" element={<Post />} />

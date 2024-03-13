@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 function Dashboard() {
 	const { user } = useProfile();
-
+	//test
 	console.log("user in dashboard is ", user);
 	return (
 		<div className="dashboard-container">

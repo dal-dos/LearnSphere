@@ -1,0 +1,75 @@
+.hero {
+	color: black;
+	text-align: center;
+	padding: 100px 20px;
+	background-size: cover;
+	background-position: center;
+	display: flex;
+	width: 100vw;
+	justify-content: end;
+}
+
+.main-hero {
+	background-image: url("./assets/mainHero.jpg");
+}
+.home-title {
+	font-size: 3rem;
+	margin: 80px 0;
+	color: white;
+}
+
+#home-container {
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(5px);
+	box-shadow: none;
+	width: 70vw;
+	padding: 3.5rem;
+}
+#home-container > h1 {
+	font-size: 72px;
+	font-weight: bolder;
+	background: linear-gradient(270deg, #007bff, #6610f2);
+	/* outline: white; */
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	letter-spacing: -3px;
+
+	margin: 20px 0;
+}
+#home-container > p {
+	color: black;
+	font-size: large;
+	font-weight: 500;
+	letter-spacing: -0.2px;
+}
+
+.hero-cta {
+	width: 30vw;
+}
+
+.featured-courses,
+.testimonials,
+.cta-signup {
+	padding: 60px 20px;
+}
+
+.featured-courses {
+	background-color: #f0f2f5;
+	color: #333;
+}
+
+.testimonials {
+	background-image: url("./assets/testimonial_photo.jpg");
+}
+
+.cta-signup {
+	background-color: #007bff;
+}
+
+.courses-list div {
+	background-color: #ffffff;
+	margin: 10px 0;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

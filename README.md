@@ -29,7 +29,7 @@ To close the program, enter 'q' + 'Enter' into the terminal.
 
 - Interactive lectures on various subjects
 - Quizzes to test your knowledge
-- Progress tracking for each course
+- Progress tracking for each courser
 - User profiles and customization options
 
 ## Contributing

@@ -22,6 +22,8 @@ export default function ProfileProvider({ children }) {
 		setLoading(false);
 	}, []);
 
+
+
 	return (
 		<ProfileContext.Provider
 			value={{
@@ -52,7 +54,7 @@ async function getUser() {
 			return null;
 		}
 		const data = await response.json();
-		console.log("cookies", data.header.cookies);
+		//console.log("cookies", data.header.cookies);
 
 		if (!data || data.success === false) {
 			console.log(data.message);
@@ -78,7 +80,6 @@ async function getProfile() {
 			return null;
 		}
 		const data = await response.json();
-
 		if (!data || data.success === false) {
 			console.log(data.message);
 			return null;

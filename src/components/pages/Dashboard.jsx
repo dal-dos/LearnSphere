@@ -1,15 +1,19 @@
 import "../styles/Dashboard.css";
 import { useProfile } from "../../contexts/profile";
+import {useLocation} from "react-router-dom"
 import { useEffect } from "react";
 
 function Dashboard() {
 	const { user } = useProfile();
-	//test
+	
+	const {state} = useLocation();
+
 	console.log("user in dashboard is ", user);
+
 	return (
 		<div className="dashboard-container">
 			<div className="dashboard-header">
-				<h1>Welcome to LearnSphere, {user?.username}!</h1>
+				<h1>Welcome to LearnSphere, {state?.tempUname}!</h1>
 				<p>
 					Explore a world of knowledge and enhance your learning
 					experience with LearnSphere.

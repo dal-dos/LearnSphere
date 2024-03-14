@@ -17,9 +17,11 @@ function Login() {
 	const [formErrors, setFormErrors] = useState({});
 	const [isSubmit, setIsSubmit] = useState(false);
 	const [isVisible, setVisible] = useState(false);
+	const [tempUsername, setTempUsername] = useState("");
 
 	const { login } = useAuth();
 	const { isLoggedIn, setIsLoggedIn, setUser, getUser } = useProfile();
+
 
 	useEffect(() => {
 		if (Object.keys(formErrors).length !== 0) {
@@ -27,9 +29,9 @@ function Login() {
 		}
 	}, [formErrors, formValues, isSubmit, isLoggedIn]);
 
-	if (isLoggedIn) {
-		navigate("/dashboard");
-	}
+	// if (isLoggedIn) {
+	// 	navigate("/dashboard");
+	// }
 
 	const toggle = () => {
 		setVisible((x) => !x);
@@ -38,6 +40,7 @@ function Login() {
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormValues({ ...formValues, [name]: value });
+		setTempUsername(formValues.username);
 	};
 
 	const handleSubmit = async (e) => {
@@ -52,7 +55,8 @@ function Login() {
 				console.log("Login successful, redirecting to dashboard...");
 				setIsLoggedIn(() => true);
 				setUser(() => getUser());
-				navigate("/dashboard");
+				
+				navigate("/dashboard", {state: {tempUname:tempUsername} });
 			} else {
 				setFormErrors({
 					password: "Username or password is invalid",

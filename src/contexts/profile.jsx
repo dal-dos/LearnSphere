@@ -1,3 +1,4 @@
+//contexts/profile.jsx
 import { useEffect, useState } from "react";
 import { AUTH_BASE_URL, CORS_CONFIG, PROFILE_BASE_URL } from "../constants";
 
@@ -11,6 +12,7 @@ export default function ProfileProvider({ children }) {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [Profile, setProfile] = useState(null);
 	const [loading, setLoading] = useState(true);
+	const [username, setUsername] = useState(null);
 
 	useEffect(() => {
 		setLoading(true);
@@ -23,6 +25,9 @@ export default function ProfileProvider({ children }) {
 	}, []);
 
 
+	const getUsername = () => { //getUsername returns from auth
+        return username //from auth.jsx possibly?
+    };
 
 	return (
 		<ProfileContext.Provider
@@ -33,7 +38,9 @@ export default function ProfileProvider({ children }) {
 				isLoggedIn,
 				setIsLoggedIn,
 				setUser,
+				setUsername,
 				getUser,
+				getUsername, //getter here for username from auth.jsx
 			}}
 		>
 			{children}
@@ -67,27 +74,29 @@ async function getUser() {
 		return null;
 	}
 }
+
 async function getProfile() {
-	try {
-		const response = await fetch(`${PROFILE_BASE_URL}/info`, {
-			headers: {
-				...CORS_CONFIG,
-			},
-			credentials: "include",
-		});
+    try {
+        const response = await fetch(`${PROFILE_BASE_URL}/info`, {
+            headers: {
+                ...CORS_CONFIG,
+            },
+            credentials: "include",
+        });
 
-		if (!response) {
-			return null;
-		}
-		const data = await response.json();
-		if (!data || data.success === false) {
-			console.log(data.message);
-			return null;
-		}
+        if (!response.ok) {
+            return null;
+        }
+        const data = await response.json();
 
-		return data.user;
-	} catch (error) {
-		console.error(error);
-		return null;
-	}
+        if (!data || data.success === false) {
+            console.log(data.message);
+            return null;
+        }
+
+        return data.user;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 }

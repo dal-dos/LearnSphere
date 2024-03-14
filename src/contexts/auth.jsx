@@ -1,3 +1,4 @@
+//contexts/auth.jsx
 import { createContext, useContext } from "react";
 import { AUTH_BASE_URL, CORS_CONFIG } from "../constants";
 
@@ -11,7 +12,7 @@ export default function AuthProvider({ children }) {
 			headers: {
 				...CORS_CONFIG,
 			},
-			body: JSON.stringify({ username, password }),
+			body: JSON.stringify({ username, password }), //username set here
 		});
 
 		const data = await res.json();
@@ -19,7 +20,7 @@ export default function AuthProvider({ children }) {
 		if (data?.success) {
 			return {
 				success: true,
-				message: "Login successful",
+				message: "Login successful", //if success send to profilecontext
 			};
 		} else {
 			return {

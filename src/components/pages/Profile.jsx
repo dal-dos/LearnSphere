@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useProfile } from "../../contexts/profile";
 import "../styles/Profile.css"; // Import CSS for styling
 
 function Profile() {
+  const { user, getUsername } = useProfile();
   let { postSlug } = useParams();
 
   // Dummy profile data
   const [profileData, setProfileData] = useState({
-    profileName: "John Doe",
+    profileName: getUsername(),
     profilePicture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     profileBio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget libero et nisi luctus semper.",
     followedTeachers: ["Teacher 1", "Teacher 2", "Teacher 3"]

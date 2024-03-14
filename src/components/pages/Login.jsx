@@ -20,7 +20,7 @@ function Login() {
 	const [tempUsername, setTempUsername] = useState("");
 
 	const { login } = useAuth();
-	const { isLoggedIn, setIsLoggedIn, setUser, getUser } = useProfile();
+	const { isLoggedIn, setIsLoggedIn, setUser, getUser, setUsername } = useProfile();
 
 
 	useEffect(() => {
@@ -55,8 +55,8 @@ function Login() {
 				console.log("Login successful, redirecting to dashboard...");
 				setIsLoggedIn(() => true);
 				setUser(() => getUser());
-				
-				navigate("/dashboard", {state: {tempUname:tempUsername} });
+				setUsername(tempUsername);
+				navigate("/dashboard");
 			} else {
 				setFormErrors({
 					password: "Username or password is invalid",

@@ -15,7 +15,9 @@ export default function AuthProvider({ children }) {
 			body: JSON.stringify({ username, password }), //username set here
 		});
 
+		console.log(res);
 		const data = await res.json();
+		console.log(data);
 
 		if (data?.success) {
 			return {

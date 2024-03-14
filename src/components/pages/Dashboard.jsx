@@ -1,6 +1,6 @@
 import "../styles/Dashboard.css";
 import { useProfile } from "../../contexts/profile";
-import {useLocation} from "react-router-dom"
+import {useLocation, Link} from "react-router-dom"
 import { useEffect } from "react";
 
 function Dashboard() {
@@ -21,7 +21,9 @@ function Dashboard() {
 				<div className="dashboard-card">
 					<h2>Your Courses</h2>
 					<p>Resume learning where you left off.</p>
+					<Link to={`/lectures/`}>
 					<button>Go to Courses</button>
+					</Link>
 				</div>
 				<div className="dashboard-card">
 					<h2>Completed Courses</h2>

@@ -7,12 +7,15 @@ function Profile() {
   const { user, getUsername } = useProfile();
   let { postSlug } = useParams();
 
+  console.log("this is profile user");
+  console.log(user);
+
   // Dummy profile data
   const [profileData, setProfileData] = useState({
     profileName: getUsername(),
     profilePicture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
-    profileBio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget libero et nisi luctus semper.",
-    followedTeachers: ["Teacher 1", "Teacher 2", "Teacher 3"]
+    profileBio: "Bio:",
+    followedTeachers: []
   });
 
   // State to control edit mode

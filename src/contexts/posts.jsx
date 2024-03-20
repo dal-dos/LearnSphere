@@ -1,22 +1,30 @@
-import { useState, createContext, useContext, useEffect } from "react";
+import { useState, createContext, useEffect } from "react";
 
 import { POSTS_BASE_URL } from "../constants";
 import { CORS_CONFIG } from "../constants";
 
-const PostsContext = createContext();
-export const usePosts = () => useContext(PostsContext);
+import { useAuth } from "@/hooks";
+
+export const PostsContext = createContext({
+	posts: [],
+});
 export default function PostsProvider({ children }) {
-	const [Posts, setPosts] = useState(null);
-	const [loading, setLoading] = useState(true);
+	const { isLoggedIn } = useAuth();
+
+	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
-		setLoading(true);
-		setPosts(async () => await getPosts());
-		setLoading(false);
-	}, []);
+		if (!isLoggedIn) {
+			return;
+		}
+		async function fetchPosts() {
+			setPosts(await getPosts());
+		}
+		fetchPosts();
+	}, [isLoggedIn]);
 
 	return (
-		<PostsContext.Provider value={{ Posts, loading }}>
+		<PostsContext.Provider value={{ posts }}>
 			{children}
 		</PostsContext.Provider>
 	);

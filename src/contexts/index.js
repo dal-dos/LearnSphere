@@ -1,5 +1,5 @@
 import AuthProvider from "./auth";
 import ProfileProvider from "./profile";
 import PostsProvider from "./posts";
-
-export { AuthProvider, ProfileProvider, PostsProvider };
+import ThemeProvider from "./theme";
+export { AuthProvider, ProfileProvider, PostsProvider, ThemeProvider };

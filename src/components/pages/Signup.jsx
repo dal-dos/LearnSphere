@@ -1,3 +1,4 @@
+//signup.jsx
 import { useState, useEffect } from "react";
 import { validateSignupForm } from "../../utils";
 import { Link } from "react-router-dom";
@@ -27,14 +28,17 @@ function Signup() {
 	};
 
 	const handleSubmit = async (e) => {
+		
 		e.preventDefault();
 		setFormErrors(validateSignupForm(formValues));
 		setIsSubmit(true);
-
-		if (Object.keys(formErrors).length === 0 && isSubmit) {
+		console.log(formValues);
+		console.log(Object.keys(formErrors).length);
+		console.log(isSubmit);
+		if (Object.keys(formErrors).length === 0) {
 			console.log(formValues);
 			const res = await signup(formValues);
-
+			console.log(res);
 			if (res.success) {
 				redirect("/dashboard");
 			} else {
@@ -46,7 +50,6 @@ function Signup() {
 	};
 
 	useEffect(() => {
-		console.log(formErrors);
 		if (Object.keys(formErrors).length === 0 && isSubmit) {
 			console.log(formValues);
 		}

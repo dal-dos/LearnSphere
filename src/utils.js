@@ -20,6 +20,7 @@ export const validateLoginForm = (values) => {
 };
 
 export const validateSignupForm = (values) => {
+	
 	const errors = {};
 	const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 	if (!values.username) {
@@ -41,5 +42,6 @@ export const validateSignupForm = (values) => {
 	if (values.password !== values.confirmPassword) {
 		errors.confirmPassword = "Those passwords didn’t match. Try again.";
 	}
+	
 	return errors;
 };

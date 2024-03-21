@@ -15,8 +15,9 @@ export default function AuthProvider({ children }) {
 			body: JSON.stringify({ username, password }), //username set here
 		});
 
-		console.log(res);
 		const data = await res.json();
+		console.log("in auth");
+		console.log(res);
 		console.log(data);
 
 		if (data?.success) {
@@ -32,6 +33,7 @@ export default function AuthProvider({ children }) {
 		}
 	}
 	async function signup({ username, password, role }) {
+
 		const res = await fetch(`${AUTH_BASE_URL}/signup`, {
 			method: "POST",
 			headers: {
@@ -40,7 +42,11 @@ export default function AuthProvider({ children }) {
 			body: JSON.stringify({ username, password, role }),
 		});
 
+		
 		const data = await res.json();
+		console.log("in auth");
+		console.log(res);
+		console.log(data);
 
 		if (data?.success) {
 			return {

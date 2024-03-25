@@ -9,10 +9,10 @@ import { useAuth } from "@/hooks";
 import ErrorMessage from "@/components/ErrorMessage";
 import FormHeading from "@/components/FormHeading";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Login = () => {
-	const { login } = useAuth();
+	const { isLoggedIn, login } = useAuth();
 	const {
 		register,
 		handleSubmit,
@@ -25,6 +25,12 @@ const Login = () => {
 	});
 	const { toast } = useToast();
 	const redirect = useNavigate();
+	const location = useLocation();
+
+	if (isLoggedIn) {
+		redirect(location.state?.from?.pathname || "/");
+		return null;
+	}
 
 	const onSubmit = handleSubmit(async function (formValues) {
 		const response = await login(formValues);
@@ -33,7 +39,7 @@ const Login = () => {
 			toast({
 				title: "Login successful",
 			});
-			redirect("../dashboard");
+			redirect(location.state?.from?.pathname || "/");
 		} else {
 			toast({
 				variant: "destructive",
@@ -68,6 +74,7 @@ const Login = () => {
 						{...register("password", {
 							required: "Password is required",
 						})}
+						type="password"
 						autoComplete="password"
 						className={cn(
 							errors.password

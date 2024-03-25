@@ -20,13 +20,14 @@ import {
 } from "@/components/ui/select";
 
 const Signup = () => {
-	const { signup } = useAuth();
+	const { signup, isLoggedIn } = useAuth();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
+			name: "",
 			role: "student",
 			username: "",
 			password: "",
@@ -36,6 +37,9 @@ const Signup = () => {
 	const { toast } = useToast();
 	const redirect = useNavigate();
 
+	if (isLoggedIn) {
+		redirect("/dashboard");
+	}
 	const onSubmit = handleSubmit(async function (formValues) {
 		console.log(formValues);
 		const response = await signup(formValues);
@@ -59,8 +63,21 @@ const Signup = () => {
 			<FormHeading>Register</FormHeading>
 			<form onSubmit={onSubmit} className="space-y-4 px-2">
 				<section>
+					<Label aria-required>Full Name</Label>
+					<Input
+						{...register("name", {
+							required: "Name is required",
+						})}
+						className={cn(
+							errors.name
+								? "focus-visible:ring-destructive"
+								: null
+						)}
+					/>
+					<ErrorMessage error={errors.name} />
+				</section>
+				<section>
 					<Label aria-required>Role</Label>
-					<Select autoComplete="role" />
 					<Select
 						{...register("role", {
 							required: "Role is required",
@@ -81,7 +98,7 @@ const Signup = () => {
 							<SelectItem value="admin">Admin</SelectItem>
 						</SelectContent>
 					</Select>
-					<ErrorMessage error={errors.username} />
+					<ErrorMessage error={errors.role} />
 				</section>
 				<section>
 					<Label aria-required>Username</Label>

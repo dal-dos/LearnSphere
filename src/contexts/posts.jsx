@@ -1,7 +1,6 @@
 import { useState, createContext, useEffect } from "react";
 
 import { POSTS_BASE_URL } from "../constants";
-import { CORS_CONFIG } from "../constants";
 
 import { useAuth } from "@/hooks";
 
@@ -9,7 +8,7 @@ export const PostsContext = createContext({
 	posts: [],
 });
 export default function PostsProvider({ children }) {
-	const { isLoggedIn } = useAuth();
+	const { isLoggedIn, getToken } = useAuth();
 
 	const [posts, setPosts] = useState([]);
 
@@ -18,10 +17,10 @@ export default function PostsProvider({ children }) {
 			return;
 		}
 		async function fetchPosts() {
-			setPosts(await getPosts());
+			setPosts(await getPosts(`token=${getToken()}`));
 		}
 		fetchPosts();
-	}, [isLoggedIn]);
+	}, [isLoggedIn, getToken]);
 
 	return (
 		<PostsContext.Provider value={{ posts }}>
@@ -30,11 +29,13 @@ export default function PostsProvider({ children }) {
 	);
 }
 
-async function getPosts() {
+async function getPosts(token) {
 	try {
 		const response = await fetch(`${POSTS_BASE_URL}/posts`, {
 			headers: {
-				...CORS_CONFIG,
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json;charset=UTF-8",
+				"Access-Control-Allow-Origin": POSTS_BASE_URL,
 			},
 		});
 
@@ -45,11 +46,11 @@ async function getPosts() {
 		const data = await response.json();
 
 		if (!data || data.success === false) {
-			console.log(data.message);
+			console.log("getPosts() failed: ", data.message);
 			return [];
 		}
 
-		return data.posts;
+		return data;
 	} catch (error) {
 		console.log(error);
 		return [];

@@ -1,6 +1,6 @@
 //contexts/profile.jsx
 import { useEffect, useState } from "react";
-import { CORS_CONFIG, PROFILE_BASE_URL } from "../constants";
+import { PROFILE_BASE_URL } from "../constants";
 
 import { createContext } from "react";
 import { useAuth } from "@/hooks";
@@ -13,7 +13,7 @@ export const ProfileContext = createContext({
 export default function ProfileProvider({ children }) {
 	const [profile, setProfile] = useState({});
 
-	const { isLoggedIn } = useAuth();
+	const { isLoggedIn, getToken } = useAuth();
 
 	useEffect(() => {
 		if (!isLoggedIn) {
@@ -28,10 +28,11 @@ export default function ProfileProvider({ children }) {
 				"user": {
 					"profileImg": "xyz.jpg",
 					"username": "meharjeet1234"
+					"token": "eyJhbGci"
 				}
 			}
 			*/
-			setProfile(await getProfile());
+			setProfile(await getProfile(`token=${getToken()}`));
 		}
 		fetchProfile();
 	}, [isLoggedIn]);
@@ -47,13 +48,14 @@ export default function ProfileProvider({ children }) {
 	);
 }
 
-async function getProfile() {
+async function getProfile(token) {
 	try {
 		const response = await fetch(`${PROFILE_BASE_URL}/info`, {
 			headers: {
-				...CORS_CONFIG,
+				"Content-Type": "application/json;charset=UTF-8",
+				"Access-Control-Allow-Origin": PROFILE_BASE_URL,
+				Authorization: `Bearer ${token}`,
 			},
-			// credentials: "include",
 		});
 
 		if (!response.ok) {
@@ -62,7 +64,7 @@ async function getProfile() {
 		const data = await response.json();
 
 		if (!data || data.success === false) {
-			console.log(data.message);
+			console.log("getProfile() failed: ", data.message);
 			return null;
 		}
 

@@ -1,5 +1,5 @@
 //App.jsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Home from "@/pages/LandingPage.jsx";
 import Dashboard from "@/pages/Dashboard.jsx";
@@ -23,7 +23,7 @@ import { Outlet } from "react-router-dom";
 import "@/global.css";
 function App() {
 	return (
-		<Router>
+		<>
 			<Navigation />
 			<Routes>
 				<Route path="/" element={<Layout />}>
@@ -51,7 +51,7 @@ function App() {
 					<Route path="*" element={<NotFound />} />
 				</Route>
 			</Routes>
-		</Router>
+		</>
 	);
 }
 

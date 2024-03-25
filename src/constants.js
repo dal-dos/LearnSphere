@@ -12,16 +12,8 @@ export const CORS_CONFIG = {
 	"Content-Type": "application/json;charset=UTF-8",
 	"Access-Control-Allow-Origin": "*",
 };
-
-const auth_headers = new Headers();
-export function getAuthHeaders() {
-	auth_headers.append("Content-Type", "application/json;charset=UTF-8");
-	auth_headers.append("Access-Control-Allow-Origin", "http://localhost:8090");
-	auth_headers.append("Access-Control-Allow-Credentials", "true");
-
-	return auth_headers;
-}
-export function appendAuthHeaders(key, value) {
-	auth_headers.append(key, value);
-	return auth_headers;
-}
+export const PROFILE_CORS_CONFIG = {
+	"Content-Type": "application/json;charset=UTF-8",
+	"Access-Control-Allow-Origin": "http://localhost:8100",
+	"Access-Control-Allow-Credentials": "true",
+};

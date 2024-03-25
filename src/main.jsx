@@ -8,21 +8,24 @@ import {
 	ThemeProvider,
 } from "./contexts";
 import { Toaster } from "@/components/ui/toaster";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<React.StrictMode>
-		<AuthProvider>
-			<ProfileProvider>
-				<PostsProvider>
-					<ThemeProvider
-						defaultTheme="dark"
-						storageKey="vite-ui-theme"
-					>
-						<App />
-						<Toaster />
-					</ThemeProvider>
-				</PostsProvider>
-			</ProfileProvider>
-		</AuthProvider>
+		<BrowserRouter>
+			<AuthProvider>
+				<ProfileProvider>
+					<PostsProvider>
+						<ThemeProvider
+							defaultTheme="dark"
+							storageKey="vite-ui-theme"
+						>
+							<App />
+							<Toaster />
+						</ThemeProvider>
+					</PostsProvider>
+				</ProfileProvider>
+			</AuthProvider>
+		</BrowserRouter>
 	</React.StrictMode>
 );

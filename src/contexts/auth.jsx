@@ -2,8 +2,7 @@
 import { createContext, useCallback, useEffect } from "react";
 import { AUTH_BASE_URL } from "../constants";
 import { useState } from "react";
-import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 var initialState = {
 	user: null,
 	isLoggedIn: false,
@@ -12,48 +11,89 @@ var initialState = {
 	refresh: () => {},
 };
 
-const axiosPrivate = axios.create({
-	withCredentials: true,
-});
-
 export const AuthContext = createContext(initialState);
 
 export default function AuthProvider({ children }) {
+	const navigate = useNavigate();
+
 	const [user, setUser] = useState({
 		role: null,
 		username: null,
-		accessToken: null,
 	});
 
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+	const verifyToken = useCallback(async (t) => {
+		try {
+			const response = await fetch("http://localhost:8090/verify", {
+				method: "GET",
+				headers: {
+					"Access-Control-Allow-Origin": AUTH_BASE_URL,
+					Authorization: `Bearer token=${t}`,
+				},
+			});
+
+			return await response.json();
+		} catch (error) {
+			console.log(error);
+			return null;
+		}
+	}, []);
+
 	const login = useCallback(async ({ username, password }) => {
-		const res = await fetch(`${AUTH_BASE_URL}/login`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json;charset=UTF-8",
-				"Access-Control-Allow-Origin": "*",
-			},
-			body: JSON.stringify({ username, password }), //username set here
-		});
+		try {
+			const res = await fetch(`${AUTH_BASE_URL}/login`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json;charset=UTF-8",
+					"Access-Control-Allow-Origin": AUTH_BASE_URL,
+				},
+				body: JSON.stringify({ username, password }), //username set here
+			});
 
-		const data = await res.json();
+			if (res.status === 401) {
+				return {
+					success: false,
+					message: "Invalid Credentials",
+				};
+			} else if (res.status === 404) {
+				return {
+					success: false,
+					message: "Account does not exist",
+				};
+			} else if (res.ok === false) {
+				return {
+					success: false,
+					message: "Server Error",
+				};
+			}
 
-		if (data?.success) {
-			setUser(data?.user);
-			setIsLoggedIn(true);
+			const data = await res.json();
 
-			return {
-				success: true,
-				message: "Login successful", //if success send to profilecontext
-			};
-		} else {
+			if (data?.success) {
+				setUser({ ...data.user });
+				setIsLoggedIn(true);
+				setTokenInStorage(data.token);
+
+				return {
+					success: true,
+					message: "Login successful", //if success send to profilecontext
+				};
+			} else {
+				return {
+					success: false,
+					message: "Some error occurred. Please try again later.",
+				};
+			}
+		} catch (error) {
+			console.log(error);
 			return {
 				success: false,
-				message: "Invalid username or password",
+				message: "Invalid Credentials or Account does not exist",
 			};
 		}
 	}, []);
+
 	const signup = useCallback(async ({ username, password, role }) => {
 		const res = await fetch(`${AUTH_BASE_URL}/signup`, {
 			method: "POST",
@@ -67,8 +107,10 @@ export default function AuthProvider({ children }) {
 		const data = await res.json();
 
 		if (data?.success) {
-			setUser(data?.user);
+			setUser({ ...data.user });
 			setIsLoggedIn(true);
+			setTokenInStorage(data.token);
+
 			return {
 				success: true,
 				message: "Signup successful",
@@ -81,66 +123,47 @@ export default function AuthProvider({ children }) {
 		}
 	}, []);
 
-	const refresh = useCallback(async () => {
-		try {
-			const response = await axiosPrivate.get(`${AUTH_BASE_URL}/refresh`);
-
-			const data = response.data;
-
-			if (data.success) {
-				setUser((user) => ({
-					...user,
-					accessToken: data.token,
-				}));
-				return data.token;
-			}
-		} catch (error) {
-			console.log(error);
-			return null;
-		}
+	const signout = useCallback(() => {
+		setUser(null);
+		setIsLoggedIn(false);
+		localStorage.removeItem("jwt");
+		navigate("/");
 	}, []);
 
+	// const refresh = useCallback(async () => {
+	// 	try {
+	// 		const response = await axiosPrivate.get(`${AUTH_BASE_URL}/refresh`);
+
+	// 		const data = response.data;
+
+	// 		if (data.success) {
+	// 			setUser((user) => ({
+	// 				...user,
+	// 				token: data.token,
+	// 			}));
+	// 			return data.token;
+	// 		}
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 		return null;
+	// 	}
+	// }, []);
+
 	useEffect(() => {
-		const requestIntercept = axiosPrivate.interceptors.request.use(
-			(config) => {
-				if (!config.headers["Authorization"]) {
-					config.headers[
-						"Authorization"
-					] = `Bearer ${user?.accessToken}`;
-				}
-				return config;
-			},
-			(error) => Promise.reject(error)
-		);
+		const v = async () => {
+			const t = getTokenFromStorage();
+			if (t) {
+				const res = await verifyToken(t);
 
-		const responseIntercept = axiosPrivate.interceptors.response.use(
-			(response) => response,
-			async (error) => {
-				const prevRequest = error?.config;
-				if (error?.response?.status === 403 && !prevRequest?.sent) {
-					prevRequest.sent = true;
-					const newAccessToken = await refresh();
-					prevRequest.headers[
-						"Authorization"
-					] = `Bearer ${newAccessToken}`;
-					return axiosPrivate(prevRequest);
+				if (res?.success) {
+					setIsLoggedIn(() => true);
+					setUser(() => ({ ...res?.user }));
+					// navigate();
 				}
-				return Promise.reject(error);
 			}
-		);
-
-		return () => {
-			axiosPrivate.interceptors.request.eject(requestIntercept);
-			axiosPrivate.interceptors.response.eject(responseIntercept);
 		};
-	}, [user, refresh]);
-
-	console.log("values", {
-		user,
-		isLoggedIn,
-		login,
-		signup,
-	});
+		v();
+	}, []);
 
 	return (
 		<AuthContext.Provider
@@ -149,10 +172,19 @@ export default function AuthProvider({ children }) {
 				isLoggedIn,
 				login,
 				signup,
-				secureAxios: axiosPrivate,
+				signout,
+				getToken: getTokenFromStorage,
+				verifyToken,
 			}}
 		>
 			{children}
 		</AuthContext.Provider>
 	);
+}
+
+function getTokenFromStorage() {
+	return localStorage.getItem("jwt");
+}
+function setTokenInStorage(token) {
+	localStorage.setItem("jwt", token);
 }

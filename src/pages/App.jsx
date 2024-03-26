@@ -14,6 +14,7 @@ import Post from "@/pages/post/Post.jsx";
 import Login from "@/pages/auth/Login.jsx";
 import Signup from "@/pages/auth/Signup.jsx";
 import Unauthorized from "@/pages/auth/Unauthorized";
+import Test from "@/pages/Test.jsx";
 
 import Layout from "@/components/Layout.jsx";
 import Navigation from "@/components/Navigation.jsx";
@@ -32,6 +33,7 @@ function App() {
 					<Route path="login" element={<Login />} />
 					<Route path="signup" element={<Signup />} />
 					<Route path="unauthorized" element={<Unauthorized />} />
+					<Route path="test" element={<Test />} />
 
 					{/* Private Routes */}
 					<Route element={<RequireAuth />}>

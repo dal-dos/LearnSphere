@@ -25,7 +25,7 @@ export default function AuthProvider({ children }) {
 
 	const verifyToken = useCallback(async (t) => {
 		try {
-			const response = await fetch("http://localhost:8090/verify", {
+			const response = await fetch(`${AUTH_BASE_URL}/verify`, {
 				method: "GET",
 				headers: {
 					"Access-Control-Allow-Origin": AUTH_BASE_URL,
@@ -126,7 +126,7 @@ export default function AuthProvider({ children }) {
 	const signout = useCallback(() => {
 		setUser(null);
 		setIsLoggedIn(false);
-		localStorage.removeItem("jwt");
+		deleteTokenInStorage();
 		navigate("/");
 	}, []);
 
@@ -182,9 +182,12 @@ export default function AuthProvider({ children }) {
 	);
 }
 
-function getTokenFromStorage() {
-	return localStorage.getItem("jwt");
+function getTokenFromStorage(name = "jwt") {
+	return localStorage.getItem(name);
 }
-function setTokenInStorage(token) {
-	localStorage.setItem("jwt", token);
+function setTokenInStorage(token, name= "jwt") {
+	localStorage.setItem(name, token);
+}
+function deleteTokenInStorage(name= "jwt") {
+	localStorage.removeItem(name);
 }

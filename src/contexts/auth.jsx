@@ -106,9 +106,6 @@ export default function AuthProvider({ children }) {
 
 		
 		const data = await res.json();
-		console.log("in auth");
-		console.log(res);
-		console.log(data);
 
 		if (data?.success) {
 			setUser({ ...data.user });

@@ -13,7 +13,6 @@ function Test() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    // Fetch all posts when component mounts
     const fetchPosts = async () => {
       try {
         const response = await fetch(`${POSTS_BASE_URL}/posts`, {
@@ -66,7 +65,6 @@ function Test() {
       });
       const data = await response.json();
       console.log('Delete Post Response:', data);
-      // Remove deleted post from the state
       setPosts(posts.filter(post => post.postId !== postId));
     } catch (error) {
       console.error('Error deleting post:', error);
@@ -85,7 +83,6 @@ function Test() {
       });
       const data = await response.json();
       console.log('Delete Comment Response:', data);
-      // Remove deleted comment from the state
       setPosts(posts.map(post => ({
         ...post,
         comments: post.comments.filter(comment => comment !== commentId)

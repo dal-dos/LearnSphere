@@ -313,21 +313,7 @@ function Test() {
         </div>
       ))}
       <h1>Test Profile Functions</h1>
-      <Button onClick={() => handleUpdateProfile()}>Update Profile</Button>
       <div>
-        <h2>Get Profile</h2>
-        <Input
-          type="text"
-          placeholder="Enter username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <Button onClick={() => handleGetProfile()}>Get Profile</Button>
-          <div>
-            <h3>Profile:</h3>
-            <p>Username: {fetchedProfile?.username}</p>
-            <p>img: {fetchedProfile?.profileImg}</p>
-          </div>
       </div>
       <h1>Manage Profiles</h1>
       <div>

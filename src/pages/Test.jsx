@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { POSTS_BASE_URL } from "../constants";
+import { POSTS_BASE_URL, PROFILE_BASE_URL } from "../constants";
 import { useProfile } from "@/hooks";
 
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,9 @@ function Test() {
   const token = localStorage.getItem("jwt");
   const { profile } = useProfile();
   const [posts, setPosts] = useState([]);
+  const [username, setUsername] = useState('');
+  const [fetchedProfile, setFetchedProfile] = useState(null);
+  const [profiles, setProfiles] = useState([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -29,7 +32,68 @@ function Test() {
         console.error('Error fetching posts:', error);
       }
     };
+    
+
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch(`${PROFILE_BASE_URL}/info?username=${username}`, {
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": PROFILE_BASE_URL,
+            Authorization: `Bearer token=${token}`,
+          },
+        });
+  
+        if (!response.ok) {
+          return null;
+        }
+        const data = await response.json();
+  
+        if (!data || data.success === false) {
+          console.log("getProfile() failed: ", data.message);
+          return null;
+        }
+  
+        setFetchedProfile(data.user);
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    };
+
+    const fetchProfiles = async () => {
+      try {
+        const response = await fetch(`${PROFILE_BASE_URL}/all`, {
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": PROFILE_BASE_URL,
+            Authorization: `Bearer token=${token}`,
+          },
+        });
+    
+        if (!response.ok) {
+          console.error("Failed to fetch profiles");
+          return null;
+        }
+    
+        const data = await response.json();
+    
+        if (!data || data.success === false) {
+          console.error("Failed to fetch profiles:", data.message);
+          return null;
+        }
+    
+        setProfiles(data.profiles);
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
+        return null;
+      }
+    };
+    
+
     fetchPosts();
+    fetchProfile();
+    fetchProfiles();
   }, []);
   
 
@@ -43,7 +107,8 @@ function Test() {
           'Access-Control-Allow-Origin': POSTS_BASE_URL,
         },
         body: JSON.stringify({
-          comment: 'Example comment'
+          userId: profile.username,
+          comment: 'Example comment 2'
         })
       });
       const data = await response.json();
@@ -83,14 +148,20 @@ function Test() {
       });
       const data = await response.json();
       console.log('Delete Comment Response:', data);
-      setPosts(posts.map(post => ({
-        ...post,
-        comments: post.comments.filter(comment => comment !== commentId)
-      })));
+      
+      setPosts(posts.map(post => {
+        if (post.postId === postId) {
+          const updatedComments = { ...post.comments };
+          delete updatedComments[commentId];
+          return { ...post, comments: updatedComments };
+        }
+        return post;
+      }));
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
   };
+  
 
   const handleCreatePost = async () => {
     try {
@@ -104,7 +175,9 @@ function Test() {
         body: JSON.stringify({
           userId: profile.username,
           image: 'example_image_url',
-          description: "Example description"
+          description: "Example description",
+          title: "Example Title",
+          lectureURL: "Example URL",
 
         })
       });
@@ -135,6 +208,86 @@ function Test() {
       console.error('Error updating post:', error);
     }
   };
+
+  const handleGetProfile = async () => {
+    try {
+      const response = await fetch(`${PROFILE_BASE_URL}/info?username=${username}`, {
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+          "Access-Control-Allow-Origin": PROFILE_BASE_URL,
+          Authorization: `Bearer token=${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        return null;
+      }
+      const data = await response.json();
+      console.log(data.user);
+
+      if (!data || data.success === false) {
+        console.log("getProfile() failed: ", data.message);
+        return null;
+      }
+
+      setFetchedProfile(data.user);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    try {
+      const response = await fetch(`${PROFILE_BASE_URL}/edit`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer token=${token}`,
+          'Content-Type': 'application/json;charset=UTF-8',
+          'Access-Control-Allow-Origin': PROFILE_BASE_URL,
+        },
+        body: JSON.stringify({
+          newProfileData: {
+            userId: fetchedProfile.username,
+            profileImg: "new_image_url"
+          }
+        })
+      });
+      const data = await response.json();
+      console.log('Update Profile Response:', data);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
+
+  const handleResetProfile = async (username) => {
+    try {
+      const response = await fetch(`${PROFILE_BASE_URL}/reset`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer token=${token}`,
+          'Content-Type': 'application/json;charset=UTF-8',
+          'Access-Control-Allow-Origin': PROFILE_BASE_URL,
+        },
+        body: JSON.stringify({
+          userId: username,
+          profileImg: "example_profile_picture_url",
+          biography: "example biography",
+        
+        }),
+      });
+  
+      if (!response.ok) {
+        console.error('Reset profile failed');
+        return;
+      }
+  
+      const data = await response.json();
+      console.log('Reset Profile Response:', data);
+    } catch (error) {
+      console.error('Error resetting profile:', error);
+    }
+  };
   
 
   return (
@@ -151,21 +304,47 @@ function Test() {
           <Button onClick={() => handleDeletePost(post.postId)}>Delete Post</Button>
           <Button onClick={() => handleUpdatePost(post.postId)}>Update Post</Button>
           <ul>
-            {post.comments.map((comment, index) => (
-              <li key={index}>
-                {comment}
-                <Button onClick={() => handleDeleteComment(post.postId, index)}>Delete Comment</Button>
-              </li>
+            {Object.keys(post.comments).map((commentId) => (
+                <li key={commentId}>
+                    {post.comments[commentId].comment}
+                    <Button onClick={() => handleDeleteComment(post.postId, commentId)}>Delete Comment</Button>
+                </li>
             ))}
           </ul>
           <Button onClick={() => handleAddComment(post.postId)}>Add Comment</Button>
         </div>
       ))}
       <h1>Test Profile Functions</h1>
-      
+      <Button onClick={() => handleUpdateProfile()}>Update Profile</Button>
+      <div>
+        <h2>Get Profile</h2>
+        <Input
+          type="text"
+          placeholder="Enter username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <Button onClick={() => handleGetProfile()}>Get Profile</Button>
+          <div>
+            <h3>Profile:</h3>
+            <p>Username: {fetchedProfile?.username}</p>
+            <p>img: {fetchedProfile?.profileImg}</p>
+          </div>
+      </div>
+      <h1>Manage Profiles</h1>
+      <div>
+        {profiles.map(profile => (
+          <div key={profile.id}>
+            <p>Username: {profile.userId}</p>
+            <p>Image: {profile.profileImg}</p>
+            <p>Bio: {profile.biography}</p>
+            <Button onClick={() => handleUpdateProfile(profile.username)}>Update Profile</Button>
+          </div>
+        ))}
+      </div>
     </div>
-    
   );
+  
 }
 
 export default Test;

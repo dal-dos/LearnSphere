@@ -235,7 +235,7 @@ function Test() {
     }
   };
 
-  const handleUpdateProfile = async () => {
+  const handleUpdateProfile = async (userId) => {
     try {
       const response = await fetch(`${PROFILE_BASE_URL}/edit`, {
         method: 'PUT',
@@ -246,8 +246,9 @@ function Test() {
         },
         body: JSON.stringify({
           newProfileData: {
-            userId: fetchedProfile.userId,
-            profileImg: "new_image_url"
+            userId: userId,
+            profileImg: "new_image_url",
+            biography: "updated bio",
           }
         })
       });

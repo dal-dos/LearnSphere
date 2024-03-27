@@ -297,9 +297,12 @@ function Test() {
       </div>
       {posts.map(post => (
         <div key={post.postId}>
-          <h2>description: {post.description}</h2>
-          <h2>postedBy: {post.postedBy}</h2>
-          <h2>image: {post.image}</h2>
+          <h2>Title: {post.title}</h2>
+          <p>Description: {post.description}</p>
+          <p>Posted By: {post.postedBy}</p>
+          <p>Image: {post.image}</p>
+          <p>Created At: {new Date(post.createdAt._seconds * 1000).toLocaleString()}</p>
+          <p>Lecture URL: {post.lectureURL}</p>
           <Button onClick={() => handleDeletePost(post.postId)}>Delete Post</Button>
           <Button onClick={() => handleUpdatePost(post.postId)}>Update Post</Button>
           <ul>

@@ -33,7 +33,6 @@ function Test() {
       }
     };
     
-
     const fetchProfile = async () => {
       try {
         const response = await fetch(`${PROFILE_BASE_URL}/info?username=${username}`, {
@@ -89,7 +88,6 @@ function Test() {
         return null;
       }
     };
-    
 
     fetchPosts();
     fetchProfile();
@@ -107,7 +105,7 @@ function Test() {
           'Access-Control-Allow-Origin': POSTS_BASE_URL,
         },
         body: JSON.stringify({
-          userId: profile.username,
+          userId: profile.userId,
           comment: 'Example comment 2'
         })
       });
@@ -173,7 +171,7 @@ function Test() {
           'Access-Control-Allow-Origin': POSTS_BASE_URL,
         },
         body: JSON.stringify({
-          userId: profile.username,
+          userId: profile.userId,
           image: 'example_image_url',
           description: "Example description",
           title: "Example Title",
@@ -248,7 +246,7 @@ function Test() {
         },
         body: JSON.stringify({
           newProfileData: {
-            userId: fetchedProfile.username,
+            userId: fetchedProfile.userId,
             profileImg: "new_image_url"
           }
         })
@@ -338,7 +336,7 @@ function Test() {
             <p>Username: {profile.userId}</p>
             <p>Image: {profile.profileImg}</p>
             <p>Bio: {profile.biography}</p>
-            <Button onClick={() => handleUpdateProfile(profile.username)}>Update Profile</Button>
+            <Button onClick={() => handleUpdateProfile(profile.userId)}>Update Profile</Button>
           </div>
         ))}
       </div>

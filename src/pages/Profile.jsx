@@ -20,7 +20,8 @@ function Profile() {
 			) : (
 				<div>
 					<img src={profile?.profileImg} alt="profile image" />
-					<h2>{profile?.username}</h2>
+					<h2>{profile?.userId}</h2>
+					<h2>{profile?.biography}</h2>
 				</div>
 			)}
 		</>

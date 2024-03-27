@@ -28,14 +28,14 @@ export default function ProfileProvider({ children }) {
 				"user": {
 					"profileImg": "xyz.jpg",
 					"username": "meharjeet1234"
-					"token": "eyJhbGci"
 				}
+				"token": "eyJhbGci"
 			}
 			*/
 			setProfile(await getProfile(`token=${getToken()}`));
 		}
 		fetchProfile();
-	}, [isLoggedIn]);
+	}, [isLoggedIn, getToken]);
 
 	return (
 		<ProfileContext.Provider

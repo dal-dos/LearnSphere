@@ -12,7 +12,7 @@ function Dashboard() {
 		<div className="dashboard-container">
 			<div className="dashboard-header">
 				<FormHeading>
-					Welcome to LearnSphere, {profile?.username}!
+					Welcome to LearnSphere, {profile?.userId}!
 				</FormHeading>
 				<p>
 					Explore a world of knowledge and enhance your learning

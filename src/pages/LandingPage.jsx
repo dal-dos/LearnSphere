@@ -14,7 +14,7 @@ function Home() {
 					</h1>
 
 					<Button className="hero-cta" asChild>
-						<Link to="/login">Explore Courses</Link>
+						<Link to="/dashboard">Explore Courses</Link>
 					</Button>
 				</div>
 			</section>

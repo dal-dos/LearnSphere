@@ -104,7 +104,6 @@ export default function AuthProvider({ children }) {
 			body: JSON.stringify({ username, password, role }),
 		});
 
-		
 		const data = await res.json();
 
 		if (data?.success) {
@@ -186,9 +185,9 @@ export default function AuthProvider({ children }) {
 function getTokenFromStorage(name = "jwt") {
 	return localStorage.getItem(name);
 }
-function setTokenInStorage(token, name= "jwt") {
+function setTokenInStorage(token, name = "jwt") {
 	localStorage.setItem(name, token);
 }
-function deleteTokenInStorage(name= "jwt") {
+function deleteTokenInStorage(name = "jwt") {
 	localStorage.removeItem(name);
 }

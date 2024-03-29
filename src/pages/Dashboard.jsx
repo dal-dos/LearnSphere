@@ -12,7 +12,7 @@ function Dashboard() {
     return (
         <div className="max-w-4xl mx-auto p-5">
             <FormHeading>Welcome to LearnSphere, {profile?.userId}!</FormHeading>
-            <Card className="bg-white shadow rounded-lg p-6 mb-6 text-center">
+            <Card className="shadow rounded-lg p-6 mb-6 text-center">
                 <CardDescription>
                     Explore a world of knowledge and enhance your learning experience with LearnSphere.
                 </CardDescription>

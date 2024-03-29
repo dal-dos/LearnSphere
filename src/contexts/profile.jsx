@@ -40,9 +40,9 @@ async function getProfile(token) {
 	try {
 		const response = await fetch(`${PROFILE_BASE_URL}/info`, {
 			headers: {
-				"Content-Type": "application/json;charset=UTF-8",
-				"Access-Control-Allow-Origin": PROFILE_BASE_URL,
 				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json;charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
 			},
 		});
 

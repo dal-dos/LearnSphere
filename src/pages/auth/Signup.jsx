@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -24,11 +24,12 @@ const Signup = () => {
 	const {
 		register,
 		handleSubmit,
+		control,
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
 			name: "",
-			role: "student",
+			role: "",
 			username: "",
 			password: "",
 			confirmPassword: "",
@@ -41,7 +42,6 @@ const Signup = () => {
 		redirect("/dashboard");
 	}
 	const onSubmit = handleSubmit(async function (formValues) {
-		console.log(formValues);
 		const response = await signup(formValues);
 
 		if (response.success) {
@@ -56,7 +56,6 @@ const Signup = () => {
 				description: response.message,
 			});
 		}
-		
 	});
 
 	return (
@@ -79,26 +78,34 @@ const Signup = () => {
 				</section>
 				<section>
 					<Label aria-required>Role</Label>
-					<Select
-						{...register("role", {
-							required: "Role is required",
-						})}
-						className={cn(
-							errors.role
-								? "focus-visible:ring-destructive"
-								: null
-						)}
-					>
-						<SelectTrigger>
-							<SelectValue placeholder="Select a role" />
-						</SelectTrigger>
+					<Controller
+						control={control}
+						name="role"
+						render={({ field }) => (
+							<Select
+								onValueChange={field.onChange}
+								className={cn(
+									errors.role
+										? "focus-visible:ring-destructive"
+										: null
+								)}
+							>
+								<SelectTrigger>
+									<SelectValue placeholder="Select a role" />
+								</SelectTrigger>
 
-						<SelectContent>
-							<SelectItem value="student">Student</SelectItem>
-							<SelectItem value="teacher">Teacher</SelectItem>
-							<SelectItem value="admin">Admin</SelectItem>
-						</SelectContent>
-					</Select>
+								<SelectContent>
+									<SelectItem value="student">
+										Student
+									</SelectItem>
+									<SelectItem value="teacher">
+										Teacher
+									</SelectItem>
+									<SelectItem value="admin">Admin</SelectItem>
+								</SelectContent>
+							</Select>
+						)}
+					/>
 					<ErrorMessage error={errors.role} />
 				</section>
 				<section>

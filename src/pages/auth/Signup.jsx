@@ -41,24 +41,30 @@ const Signup = () => {
 	if (isLoggedIn) {
 		return <Navigate to={location.state?.from?.pathname || "/"} />;
 	}
-	
+
 	const onSubmit = handleSubmit(async function (formValues) {
 		try {
 			const response = await signup(formValues);
 			console.log('Response:', response); // Log the response for debugging
 			
-			if (response.success) {
-				toast({
-					title: "Signup successful",
-				});
-				redirect("../dashboard");
-			} else {
-				toast({
-					variant: "destructive",
-					title: "Signup Failed!",
-					description: response.message,
-				});
+			if (response && typeof response === 'object') {
+				if (response.success) {
+					toast({
+						title: "Signup successful",
+					});
+					redirect("../dashboard");
+					return;
+				} else {
+					toast({
+						variant: "destructive",
+						title: "Signup Failed!",
+						description: response.message,
+					});
+				}
 			}
+			
+			// Handle invalid response format
+			throw new Error("Invalid response format");
 		} catch (error) {
 			console.error('Error during signup:', error); // Log any errors
 			toast({
@@ -68,6 +74,7 @@ const Signup = () => {
 			});
 		}
 	});
+
 	
 
 	return (

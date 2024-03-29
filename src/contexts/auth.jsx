@@ -95,33 +95,42 @@ export default function AuthProvider({ children }) {
 	}, []);
 
 	const signup = useCallback(async ({ username, password, role }) => {
-		const res = await fetch(`${AUTH_BASE_URL}/signup`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json;charset=UTF-8",
-				"Access-Control-Allow-Origin": "*",
-			},
-			body: JSON.stringify({ username, password, role }),
-		});
+		try {
+			const res = await fetch(`${AUTH_BASE_URL}/signup`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json;charset=UTF-8",
+					"Access-Control-Allow-Origin": "*",
+				},
+				body: JSON.stringify({ username, password, role }),
+			});
 
-		const data = await res.json();
+			const data = await res.json();
 
-		if (data?.success) {
-			setUser({ ...data.user });
-			setIsLoggedIn(true);
-			setTokenInStorage(data.token);
-
-			return {
-				success: true,
-				message: "Signup successful",
-			};
-		} else {
+			if (data.success) {
+				setUser({ ...data.user });
+				setIsLoggedIn(true);
+				setTokenInStorage(data.token);
+	
+				return {
+					success: true,
+					message: "Signup successful",
+				};
+			} else {
+				return {
+					success: false,
+					message: data.message,
+				};
+			}
+		} catch (error) {
+			console.error('Error during signup:', error);
 			return {
 				success: false,
-				message: data.message,
+				message: "An error occurred during signup.",
 			};
 		}
 	}, []);
+	
 
 	const signout = useCallback(() => {
 		setUser(null);

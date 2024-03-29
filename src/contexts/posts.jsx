@@ -1,5 +1,5 @@
 import { useState, createContext, useEffect } from "react";
-import { useAuth } from "@/hooks";
+import { useAuth, useProfile } from "@/hooks";
 import { POSTS_BASE_URL } from "../constants";
 
 export const PostsContext = createContext({
@@ -13,6 +13,7 @@ export const PostsContext = createContext({
 
 export default function PostsProvider({ children }) {
   const { isLoggedIn, getToken } = useAuth();
+  const { profile } = useProfile();
 
   const [posts, setPosts] = useState([]);
   
@@ -50,26 +51,61 @@ export default function PostsProvider({ children }) {
     }
   };
 
-  const handleAddComment = async (postId, comment) => {
+  // const handleAddComment = async (postId, comment) => {
+  //   try {
+  //     const response = await fetch(`${POSTS_BASE_URL}/posts/${postId}/addcomment`, {
+  //       method: 'POST',
+  //       headers: {
+	// 		'Authorization': `Bearer token=${getToken()}`,
+  //         "Content-Type": "application/json;charset=UTF-8",
+  //         "Access-Control-Allow-Origin": POSTS_BASE_URL,
+  //       },
+  //       body: JSON.stringify({
+  //         comment,
+  //       }),
+  //     });
+  //     const data = await response.json();
+  //     console.log('Add Comment Response:', data);
+  //   } catch (error) {
+  //     console.error('Error adding comment:', error);
+  //   }
+  // };
+
+
+
+  const handleAddComment = async (postId, commentText) => {
     try {
       const response = await fetch(`${POSTS_BASE_URL}/posts/${postId}/addcomment`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-			'Authorization': `Bearer token=${getToken()}`,
+          Authorization: `Bearer token=${getToken()}`,
           "Content-Type": "application/json;charset=UTF-8",
           "Access-Control-Allow-Origin": POSTS_BASE_URL,
         },
         body: JSON.stringify({
-          comment,
+          userId: profile.userId,
+          comment: commentText, 
         }),
       });
       const data = await response.json();
-      console.log('Add Comment Response:', data);
-      // Update posts state if necessary
+      // if(response.ok) {
+      //   setPosts(posts => posts.map(post => {
+      //     if(post.id === postId) {
+      //       // Assuming your data structure and how you'd like to update it
+      //       // This is a simplistic approach; adjust based on your actual data structure
+      //       return {...post, comments: [...post.comments, data]};
+      //     }
+      //     return post;
+      //   }));
+      // } else {
+      //   console.error('Failed to add comment:', data.message);
+      // }
     } catch (error) {
       console.error('Error adding comment:', error);
     }
   };
+  
+
 
   const handleDeletePost = async (postId) => {
     try {
@@ -91,23 +127,55 @@ export default function PostsProvider({ children }) {
     }
   };
 
+  // const handleDeleteComment = async (postId, commentId) => {
+  //   try {
+  //     const response = await fetch(`${POSTS_BASE_URL}/posts/${postId}/comments/${commentId}/delete`, {
+  //       method: 'DELETE',
+  //       headers: {
+	// 		'Authorization': `Bearer token=${getToken()}`,
+  //         "Content-Type": "application/json;charset=UTF-8",
+  //         "Access-Control-Allow-Origin": POSTS_BASE_URL,
+  //       },
+  //     });
+  //     const data = await response.json();
+  //     console.log('Delete Comment Response:', data);
+  //     // Update posts state if necessary
+  //   } catch (error) {
+  //     console.error('Error deleting comment:', error);
+  //   }
+  // };
+
+
+
   const handleDeleteComment = async (postId, commentId) => {
     try {
       const response = await fetch(`${POSTS_BASE_URL}/posts/${postId}/comments/${commentId}/delete`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-			'Authorization': `Bearer token=${getToken()}`,
+          Authorization: `Bearer token=${getToken()}`,
           "Content-Type": "application/json;charset=UTF-8",
           "Access-Control-Allow-Origin": POSTS_BASE_URL,
         },
       });
       const data = await response.json();
-      console.log('Delete Comment Response:', data);
-      // Update posts state if necessary
+      console.log("Delete Comment Response:", data);
+
+      if(response.ok) {
+        setPosts(posts => posts.map(post => {
+          if(post.id === postId) {
+            const updatedComments = post.comments.filter(comment => comment.id !== commentId);
+            return {...post, comments: updatedComments};
+          }
+          return post;
+        }));
+      } else {
+        console.error('Failed to delete comment:', data.message);
+      }
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
   };
+  
 
 
 

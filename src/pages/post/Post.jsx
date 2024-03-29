@@ -17,6 +17,8 @@ function Post() {
 
   const [post, setPost] = useState(null);
 
+  const [comment, setComment] = useState(""); 
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -65,9 +67,33 @@ const deletePost = async () => {
   };
 
   
-    const navigateToEdit = () => {
+  const navigateToEdit = () => {
       navigate('/posts/${postSlug}/edit');
-    };
+  };
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+
+  const submitComment = async () => {
+    if (comment.trim()) {
+      try {
+        await handleAddComment(post.postId, comment);
+        setComment(""); 
+        toast({
+          title: "Comment added successfully",
+        });
+      } catch (error) {
+        console.error('Error adding comment:', error);
+        toast({
+          variant: "destructive",
+          title: "Failed to add comment",
+          description: "An error occurred while trying to add the comment.",
+        });
+      }
+    }
+  };
 
 
   if (!post) {
@@ -86,14 +112,24 @@ const deletePost = async () => {
   
         <div className="px-5 py-4">
           <h3 className="text-lg font-bold mb-3 text-black">Comments</h3>
+          
+          {post.comments && Object.entries(post.comments).map(([commentId, comment]) => (
+            <div key={commentId} className="bg-blue-800 text-white p-2 rounded my-2">
+              {comment.text} - <span className="text-gray-400">{comment.username}</span>
+              <button onClick={() => handleDeleteComment(post.postId, commentId)} className="text-red-500 float-right">Delete</button>
+            </div>
+          ))}
           <div className="flex items-center">
             <input
               type="text"
               placeholder="Write a comment..."
+              value={comment}
+              onChange={handleCommentChange}
               className="w-full p-2 mb-2 text-black text-sm"
-              style={{ maxWidth: 'calc(100% - 120px)' }} 
+              style={{ maxWidth: 'calc(100% - 120px)' }}
             />
             <button
+              onClick={submitComment} // Make sure to define this function to handle comment submission
               className="ml-2 py-1 px-2 bg-blue-800 hover:bg-blue-900 text-white font-bold text-sm rounded"
               style={{ maxWidth: '100px' }}
             >
@@ -117,6 +153,7 @@ const deletePost = async () => {
       </Card>
     </div>
   );
+  
   
   
   

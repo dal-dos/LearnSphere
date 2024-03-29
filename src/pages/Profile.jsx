@@ -29,9 +29,9 @@ function Profile() {
         if (profile) {
             setEditProfile({
                 userId: profile.userId || '',
-                profileImg: profile.profileImg || 'https://via.placeholder.com/150',
+                profileImg: profile.profileImg,
                 biography: profile.biography || '',
-                role: user.role || '',
+                role: user.role,
             });
 
             if (user.role === "teacher") {

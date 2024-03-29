@@ -4,13 +4,13 @@ import { POSTS_BASE_URL } from "../constants";
 
 export const PostsContext = createContext({
   posts: [],
-  handleAddComment: () => {},
-  handleDeletePost: () => {},
-  handleDeleteComment: () => {},
-  handleCreatePost: () => {},
-  handleUpdatePost: () => {},
-  getPostById: () => {},
-  handleGetPostByUserId: () => {},
+  handleAddComment: async () => {},
+  handleDeletePost: async () => {},
+  handleDeleteComment: async() => {},
+  handleCreatePost: async () => {},
+  handleUpdatePost: async () => {},
+  getPostById: async () => {},
+  handleGetPostByUserId: async () => {}, 
 });
 
 export default function PostsProvider({ children }) {
@@ -112,7 +112,14 @@ export default function PostsProvider({ children }) {
 
       const data = await response.json();
       console.log('Delete Post Response:', data);
-	  setPosts(posts.filter(post => post.postId !== postId));
+      if (data.success) {
+        setPosts(posts.filter(post => post.postId !== postId));
+        return { success: true, post: data.post };
+      } else {
+        console.error("Failed to create post:", data.message);
+        return { success: false, message: data.message };
+    }
+	  
     } catch (error) {
       console.error('Error deleting post:', error);
     }
@@ -167,9 +174,17 @@ const handleCreatePost = async ({ userId, title, description, image, lectureURL 
 			lectureURL,
 		  }),
 	  });
-	  const data = await response.json();
-	  console.log('Create Post Response:', data);
-	  
+
+    const data = await response.json();
+    console.log(data);
+	  if (data.success) {
+      setPosts((posts) => [data.post, ...posts]);
+      return { success: true, post: data.post };
+    } else {
+      console.error("Failed to create post:", data.message);
+      return { success: false, message: data.message };
+    }
+	
 	} catch (error) {
 	  console.error('Error creating post:', error);
 	}
@@ -196,6 +211,14 @@ const handleUpdatePost = async (postId, { title, description, image, lectureURL 
 	  const data = await response.json();
 	  console.log(data);
 	  console.log('Update Post Response:', data);
+
+    if (data.success) {
+      setPosts((posts) => [data.post, ...posts]);
+      return { success: true, post: data.post };
+    } else {
+      console.error("Failed to update post:", data.message);
+      return { success: false, message: data.message };
+    }
 	} catch (error) {
 	  console.error('Error updating post:', error);
 	}

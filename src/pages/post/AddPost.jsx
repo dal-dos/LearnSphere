@@ -20,29 +20,65 @@ function AddPost() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // const submitPost = async (e) => {
+  //   e.preventDefault();
+    
+  //   try {
+  //     await handleCreatePost({
+  //       userId: profile.userId, 
+  //       title,
+  //       description,
+  //       image: imageLink,
+  //       lectureURL,
+  //     });
+
+	//     toast({title: "Created Post"});
+  //     navigate('/posts'); 
+  //   } catch (error) {
+  //     console.error('Failed to create post:', error);
+  //     toast({
+  //       variant: "destructive",
+  //       title: "Failed to create post",
+  //       description: "An error occurred while trying to delete the post.",
+  //     });
+  //   }
+  // };
+
   const submitPost = async (e) => {
     e.preventDefault();
     
     try {
-      await handleCreatePost({
-        userId: profile.userId, 
-        title,
-        description,
-        image: imageLink,
-        lectureURL,
+      const res = await handleCreatePost({
+          userId: profile.userId,
+          title,
+          description,
+          image: imageLink,
+          lectureURL,
       });
 
-	  toast({title: "Created Post"});
-      navigate('/posts'); 
-    } catch (error) {
-      console.error('Failed to create post:', error);
+      console.log(res);
+      if (res.success) {
+          toast({ title: "Created Post", description: res.message });
+          navigate("/posts");
+      } else {
+          toast({
+              variant: "destructive",
+              title: "Failed to create post",
+              description:
+                  res.message ||
+                  "Failed to create post. Please try again",
+          });
+      }
+  } catch (error) {
+      console.error("Failed to create post:", error);
       toast({
-        variant: "destructive",
-        title: "Failed to create post",
-        description: "An error occurred while trying to delete the post.",
+          variant: "destructive",
+          title: "Failed to create post",
+          description:
+              error.message || "Failed to create post. Please try again",
       });
-    }
-  };
+  }
+};
 
   return (
     <Card className="max-w-4xl mx-auto p-4 shadow-md rounded-lg">

@@ -41,23 +41,34 @@ const Signup = () => {
 	if (isLoggedIn) {
 		return <Navigate to={location.state?.from?.pathname || "/"} />;
 	}
-
+	
 	const onSubmit = handleSubmit(async function (formValues) {
-		const response = await signup(formValues);
-
-		if (response.success) {
-			toast({
-				title: "Signup successful",
-			});
-			redirect("../dashboard");
-		} else {
+		try {
+			const response = await signup(formValues);
+			console.log('Response:', response); // Log the response for debugging
+			
+			if (response.success) {
+				toast({
+					title: "Signup successful",
+				});
+				redirect("../dashboard");
+			} else {
+				toast({
+					variant: "destructive",
+					title: "Signup Failed!",
+					description: response.message,
+				});
+			}
+		} catch (error) {
+			console.error('Error during signup:', error); // Log any errors
 			toast({
 				variant: "destructive",
 				title: "Signup Failed!",
-				description: response.message,
+				description: "An error occurred during signup.",
 			});
 		}
 	});
+	
 
 	return (
 		<div className="w-1/2 translate-x-1/2 border rounded-lg p-2 pb-4">

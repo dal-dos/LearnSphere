@@ -10,6 +10,7 @@ export const PostsContext = createContext({
   handleCreatePost: () => {},
   handleUpdatePost: () => {},
   getPostById: () => {},
+  handleGetPostByUserId: () => {},
 });
 
 export default function PostsProvider({ children }) {
@@ -200,8 +201,24 @@ const handleUpdatePost = async (postId, { title, description, image, lectureURL 
 	}
   };
 
+  const handleGetPostByUserId = async (userId) => {
+    try {
+      const response = await fetch(`${POSTS_BASE_URL}/posts/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer token=${getToken()}`,
+          "Content-Type": "application/json;charset=UTF-8",
+          "Access-Control-Allow-Origin": POSTS_BASE_URL,
+        },
+      });
+      const data = await response.json();
+      return data.post;
+    } catch (error) {
+      console.error("Error fetching posts by user ID:", error);
+    }
+  };
+
   return (
-    <PostsContext.Provider value={{ posts, getPostById, handleAddComment, handleDeletePost, handleDeleteComment, handleCreatePost, handleUpdatePost }}>
+    <PostsContext.Provider value={{ posts, getPostById, handleAddComment, handleDeletePost, handleDeleteComment, handleCreatePost, handleUpdatePost, handleGetPostByUserId }}>
       {children}
     </PostsContext.Provider>
   );

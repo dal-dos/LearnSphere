@@ -77,7 +77,6 @@ function EditPost() {
 			type="text"
 			value={post.title}
 			onChange={handleChange}
-			required
 			className="input sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 			placeholder="Title..."
 		  />
@@ -89,7 +88,6 @@ function EditPost() {
 			name="description"
 			value={post.description}
 			onChange={handleChange}
-			required
 			className="input sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 			rows="4"
 			placeholder="Description..."
@@ -115,7 +113,6 @@ function EditPost() {
 			type="text"
 			value={post.lectureURL}
 			onChange={handleChange}
-			required
 			className="input sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 			placeholder="Youtube video url..."
 		  />

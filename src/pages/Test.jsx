@@ -59,6 +59,8 @@ function Test() {
 
     fetchPosts();
     fetchProfiles();
+
+    handleGetPostByUserId("meharjeet1234");
   }, []);
 
   const handleAddComment = async (postId) => {
@@ -183,6 +185,7 @@ function Test() {
           },
         });
         const data = await response.json();
+        
         console.log("Get Profile by ID Response:", data);
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -191,6 +194,21 @@ function Test() {
 
   };
 
+  const handleGetPostByUserId = async (userId) => {
+    try {
+      const response = await fetch(`${POSTS_BASE_URL}/posts/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer token=${token}`,
+          "Content-Type": "application/json;charset=UTF-8",
+          "Access-Control-Allow-Origin": POSTS_BASE_URL,
+        },
+      });
+      const data = await response.json();
+      console.log("Get Posts by User ID Response:", data);
+    } catch (error) {
+      console.error("Error fetching posts by user ID:", error);
+    }
+  };
 
   const handleUpdateProfile = async (userId, profileImg= undefined, biography = undefined, nickname = undefined, role = undefined) => {
 		try {

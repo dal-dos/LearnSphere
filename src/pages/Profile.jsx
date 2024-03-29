@@ -2,8 +2,12 @@ import React, { useContext, useState, useEffect } from 'react';
 import { ProfileContext } from '@/contexts/profile';
 import FormHeading from "@/components/FormHeading";
 import { usePosts, useAuth } from "@/hooks"; 
-import { Card, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardTitle, CardDescription, CardContent, CardHeader, CardFooter} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from '@radix-ui/react-dropdown-menu';
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 function Profile() {
     const { profile, handleUpdateProfile } = useContext(ProfileContext);
@@ -51,7 +55,6 @@ function Profile() {
 
     return (
         <div className="max-w-4xl mx-auto p-5">
-            <FormHeading>Profile</FormHeading>
             {!profile ? (
                 <div className="text-center py-10">
                     <h1 className="text-xl font-semibold">Loading Profile...</h1>
@@ -59,28 +62,33 @@ function Profile() {
             ) : (
                 <>
                     {isEditing ? (
-                        <form onSubmit={handleSubmit} className="bg-white shadow rounded-lg p-6">
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="biography">
-                                    Biography
-                                </label>
-                                <textarea id="biography" name="biography" rows="3" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value={editProfile.biography} onChange={handleChange}></textarea>
-                            </div>
-                            
-                            <div className="flex items-center justify-between">
-                                <Button className="hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                                    Save
-                                </Button>
-                                <Button className="bg-transparent hover:bg-gray-500 text-black font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded" onClick={() => setIsEditing(false)} type="button">
-                                    Cancel
-                                </Button>
-                            </div>
-                        </form>
+                        <Card className="shadow rounded-lg p-6 text-center">
+                            <form onSubmit={handleSubmit} >
+                                <div className="mb-4">
+                                    <Label className="block font-bold mb-2" htmlFor="biography">
+                                        Biography
+                                    </Label>
+                                    <Textarea id="biography" name="biography" rows="3" placeholder="Write your biography..." className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" value={editProfile.biography} onChange={handleChange}></Textarea>
+                                </div>
+                                
+                                <div className="flex items-center justify-between">
+                                    <Button className="hover:bg-blue-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                                        Save
+                                    </Button>
+                                    <Button variant="destructive" className="hover:bg-gray-500 font-semibold hover:text-white py-2 px-4 border hover:border-transparent rounded" onClick={() => setIsEditing(false)} type="button">
+                                        Cancel
+                                    </Button>
+                                </div>
+                            </form>
+                        </Card>
                     ) : (
                         <Card className="shadow rounded-lg p-6 text-center">
-                            <img className="rounded-full h-32 w-32 object-cover mx-auto" src={editProfile.profileImg} alt="Profile" />
-                            <CardTitle className="text-lg font-semibold mt-2 text-black">{editProfile.userId}</CardTitle>
-                            <CardDescription>Role: {editProfile.role}</CardDescription>
+                                <Avatar className="rounded-full h-32 w-32 object-cover mx-auto">
+                                    <AvatarImage src={editProfile.profileImg} alt="Profile Image" />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
+                            <CardTitle className="text-lg font-semibold mt-2">{editProfile.userId}</CardTitle>
+                            <CardDescription>{editProfile.role}</CardDescription>
                             <CardDescription>{editProfile.biography}</CardDescription>
                             
                             <Button onClick={() => setIsEditing(true)} className="hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">

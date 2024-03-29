@@ -295,6 +295,7 @@ function Test() {
 						<p>Username: {profile.userId}</p>
 						<img src={profile.profileImg} alt="Profile Image" style={{width: '5%', height: 'auto'}}/>
 						<p>Bio: {profile.biography}</p>
+            <p>Role: {profile.role}</p>
 						<Button
 							onClick={() => handleUpdateProfile(profile.userId)}
 						>

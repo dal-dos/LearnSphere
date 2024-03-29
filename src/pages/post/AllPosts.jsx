@@ -1,4 +1,4 @@
-import { usePosts } from "@/hooks";
+import { usePosts, useAuth } from "@/hooks";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import FormHeading from "@/components/FormHeading";
@@ -11,10 +11,12 @@ import { useNavigate } from 'react-router-dom';
 function AllPostsPage() {
 	
 	const { posts } = usePosts();
+    const { user } = useAuth();
 
 	const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
 	const { profile } = useProfile();
+    const [hasPermissions, setPermissions] = useState(false);
 
 	const navigate = useNavigate();
 
@@ -25,6 +27,8 @@ function AllPostsPage() {
 				post?.description?.toString().toLowerCase().includes(searchTerm)
 		);
 		setSearchResults(results);
+
+        setPermissions(user.role !== "student");
 	}, [searchTerm, posts]);
 
 	const addPost = () => {
@@ -45,7 +49,7 @@ function AllPostsPage() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-				<Button onClick={addPost} >
+				<Button onClick={addPost} disabled={!hasPermissions}>
 							Create Post
 				</Button>
 				</div>

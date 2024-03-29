@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks";
 import ErrorMessage from "@/components/ErrorMessage";
 import FormHeading from "@/components/FormHeading";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import {
 	Select,
@@ -39,8 +39,9 @@ const Signup = () => {
 	const redirect = useNavigate();
 
 	if (isLoggedIn) {
-		redirect("/dashboard");
+		return <Navigate to={location.state?.from?.pathname || "/"} />;
 	}
+
 	const onSubmit = handleSubmit(async function (formValues) {
 		const response = await signup(formValues);
 

@@ -109,7 +109,7 @@ export default function PostsProvider({ children }) {
           "Access-Control-Allow-Origin": POSTS_BASE_URL,
         },
       });
-	  console.log(getToken());
+
       const data = await response.json();
       console.log('Delete Post Response:', data);
 	  setPosts(posts.filter(post => post.postId !== postId));
@@ -177,7 +177,7 @@ const handleCreatePost = async ({ userId, title, description, image, lectureURL 
   
 
   
-const handleUpdatePost = async (postId, {userId, title, description, image, lectureURL }) => {
+const handleUpdatePost = async (postId, { title, description, image, lectureURL }) => {
 	try {
 	  const response = await fetch(`${POSTS_BASE_URL}/posts/update/${postId}`, {
 		method: 'PUT',
@@ -187,7 +187,6 @@ const handleUpdatePost = async (postId, {userId, title, description, image, lect
 		  'Access-Control-Allow-Origin': POSTS_BASE_URL,
 		},
 		body: JSON.stringify({
-		  userId, 
 		  title,
 		  description,
 		  image,

@@ -8,7 +8,8 @@ export const PostsContext = createContext({
   handleDeletePost: () => {},
   handleDeleteComment: () => {},
   handleCreatePost: () => {},
-  handleUpdatePost: () => {}
+  handleUpdatePost: () => {},
+  getPostById: () => {},
 });
 
 export default function PostsProvider({ children }) {
@@ -51,25 +52,26 @@ export default function PostsProvider({ children }) {
     }
   };
 
-  // const handleAddComment = async (postId, comment) => {
-  //   try {
-  //     const response = await fetch(`${POSTS_BASE_URL}/posts/${postId}/addcomment`, {
-  //       method: 'POST',
-  //       headers: {
-	// 		'Authorization': `Bearer token=${getToken()}`,
-  //         "Content-Type": "application/json;charset=UTF-8",
-  //         "Access-Control-Allow-Origin": POSTS_BASE_URL,
-  //       },
-  //       body: JSON.stringify({
-  //         comment,
-  //       }),
-  //     });
-  //     const data = await response.json();
-  //     console.log('Add Comment Response:', data);
-  //   } catch (error) {
-  //     console.error('Error adding comment:', error);
-  //   }
-  // };
+  const getPostById = async (postId) => {
+	try {
+
+	  const response = await fetch(`${POSTS_BASE_URL}/posts/${postId}`, {
+		headers: {
+		  'Authorization': `Bearer token=${getToken()}`,
+		  'Content-Type': 'application/json;charset=UTF-8',
+		  'Access-Control-Allow-Origin': POSTS_BASE_URL,
+		},
+	  });
+	  const data = await response.json();
+	  if (response.ok) {
+		return data.post
+	  } else {
+		console.error("Failed to fetch post", data.message);
+	  }
+	} catch (error) {
+	  console.error("Error fetching post:", error);
+	}
+  };
 
 
 
@@ -88,18 +90,6 @@ export default function PostsProvider({ children }) {
         }),
       });
       const data = await response.json();
-      // if(response.ok) {
-      //   setPosts(posts => posts.map(post => {
-      //     if(post.id === postId) {
-      //       // Assuming your data structure and how you'd like to update it
-      //       // This is a simplistic approach; adjust based on your actual data structure
-      //       return {...post, comments: [...post.comments, data]};
-      //     }
-      //     return post;
-      //   }));
-      // } else {
-      //   console.error('Failed to add comment:', data.message);
-      // }
     } catch (error) {
       console.error('Error adding comment:', error);
     }
@@ -126,26 +116,6 @@ export default function PostsProvider({ children }) {
       console.error('Error deleting post:', error);
     }
   };
-
-  // const handleDeleteComment = async (postId, commentId) => {
-  //   try {
-  //     const response = await fetch(`${POSTS_BASE_URL}/posts/${postId}/comments/${commentId}/delete`, {
-  //       method: 'DELETE',
-  //       headers: {
-	// 		'Authorization': `Bearer token=${getToken()}`,
-  //         "Content-Type": "application/json;charset=UTF-8",
-  //         "Access-Control-Allow-Origin": POSTS_BASE_URL,
-  //       },
-  //     });
-  //     const data = await response.json();
-  //     console.log('Delete Comment Response:', data);
-  //     // Update posts state if necessary
-  //   } catch (error) {
-  //     console.error('Error deleting comment:', error);
-  //   }
-  // };
-
-
 
   const handleDeleteComment = async (postId, commentId) => {
     try {
@@ -231,7 +201,7 @@ const handleUpdatePost = async (postId, { title, description, image, lectureURL 
   };
 
   return (
-    <PostsContext.Provider value={{ posts, handleAddComment, handleDeletePost, handleDeleteComment, handleCreatePost, handleUpdatePost }}>
+    <PostsContext.Provider value={{ posts, getPostById, handleAddComment, handleDeletePost, handleDeleteComment, handleCreatePost, handleUpdatePost }}>
       {children}
     </PostsContext.Provider>
   );

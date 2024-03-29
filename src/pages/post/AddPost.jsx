@@ -6,7 +6,7 @@ import { Card, CardTitle, CardDescription, CardContent, CardHeader, CardFooter} 
 import { Input } from "@/components/ui/input";
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea"
+import { Textarea } from "@/components/ui/textarea";
 
 function AddPost() {
   const { handleCreatePost } = usePosts(); 

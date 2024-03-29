@@ -1,48 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Card, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { POSTS_BASE_URL } from "../../constants";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from 'react-router-dom';
-import { usePosts } from "../../hooks";
-
+import { usePosts } from  "@/hooks";
+import { useAuth } from  "@/hooks";
+import { Card, CardTitle, CardDescription, CardContent, CardHeader, CardFooter} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from '@radix-ui/react-dropdown-menu';
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 function Post() {
-
   const { postSlug } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { posts, handleDeletePost, handleAddComment, handleDeleteComment } = usePosts(); 
-
+  const { getPostById, handleDeletePost, handleAddComment, handleDeleteComment, getPost } = usePosts(); 
+  const { user } = useAuth();
   const [post, setPost] = useState(null);
 
   const [comment, setComment] = useState(""); 
 
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const token = localStorage.getItem("jwt");
-        const response = await fetch(`${POSTS_BASE_URL}/posts/${postSlug}`, {
-          headers: {
-            'Authorization': `Bearer token=${token}`,
-            'Content-Type': 'application/json;charset=UTF-8',
-            'Access-Control-Allow-Origin': POSTS_BASE_URL,
-          },
-        });
-        const data = await response.json();
-        if (response.ok) {
-          setPost(data.post);
-        } else {
-          console.error("Failed to fetch post", data.message);
-        }
-      } catch (error) {
-        console.error("Error fetching post:", error);
-      }
-    };
+  const [hasPermissions, setPermissions] = useState(false);
 
+  const [hoveredCommentId, setHoveredCommentId] = useState(null);
+
+  const handleMouseEnter = (commentId) => {
+    setHoveredCommentId(commentId);
+  };
+user
+  const handleMouseLeave = () => {
+    setHoveredCommentId(null);
+  };
+  useEffect(() => {
+    
+    async function fetchPost() {
+      const fetchedPost = await getPostById(postSlug);
+      setPost(fetchedPost);
+    }
     fetchPost();
-  }, [postSlug]);
+    if(user.role === "admin" || user.userId === post.postedBy ){
+      setPermissions(true);
+    }
+    
+    
+  }, [getPostById, postSlug]);
 
 
 
@@ -65,7 +67,6 @@ const deletePost = async () => {
       });
     }
   };
-
   
   const navigateToEdit = () => {
       navigate('/posts/${postSlug}/edit');
@@ -74,7 +75,6 @@ const deletePost = async () => {
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
-
 
   const submitComment = async () => {
     if (comment.trim()) {
@@ -95,68 +95,63 @@ const deletePost = async () => {
     }
   };
 
-
   if (!post) {
     return <div>Loading post...</div>;
   }
 
-  return (
-    <div className="max-w-4xl mx-auto p-5">
-      <Card className="bg-blue-600 rounded-lg shadow-lg overflow-hidden">
-        <div className="p-5">
-          <CardTitle className="text-2xl font-bold mb-3 text-black">{post.title}</CardTitle>
-          <CardDescription className="text-gray-100 mb-4">{post.description}</CardDescription>
-          <p className="text-gray-100 mb-2">{post.content}</p>
-          <h6 className="text-sm text-gray-200 mb-4">Posted by: {post.postedBy} | Slug: {postSlug}</h6>
-        </div>
-  
-        <div className="px-5 py-4">
-          <h3 className="text-lg font-bold mb-3 text-black">Comments</h3>
-          
-          {post.comments && Object.entries(post.comments).map(([commentId, comment]) => (
-            <div key={commentId} className="bg-blue-800 text-white p-2 rounded my-2">
-              {comment.text} - <span className="text-gray-400">{comment.username}</span>
-              <button onClick={() => handleDeleteComment(post.postId, commentId)} className="text-red-500 float-right">Delete</button>
+    return (
+        <Card className="max-w-4xl mx-auto p-4 shadow-md rounded-lg">
+          <CardHeader>
+            <CardTitle className="text-3xl font-semibold text-center mb-6">{post.title}</CardTitle>
+          </CardHeader>
+          <CardContent>
+          <img src={post.image} alt="Thumbnail" />
+            <CardDescription>Description: {post.description}</CardDescription>
+            <CardDescription>Posted by: {post.postedBy}</CardDescription>
+            <CardDescription>Date: {new Date(post.createdAt._seconds * 1000).toLocaleString()}</CardDescription>
+            <CardDescription>Lecture URL: {post.lectureURL}</CardDescription>
+          </CardContent>
+          <CardContent>
+            <Label className="text-lg font-bold mb-3">Comments</Label>
+            <div>
+              {post.comments && Object.entries(post.comments).map(([commentId, comment]) => (
+                <div key={commentId} className="relative flex flex-col space-y-4 mb-4 hover:bg-muted" onMouseEnter={() => handleMouseEnter(commentId)} onMouseLeave={() => handleMouseLeave(commentId)} >
+                  <div className="flex justify-between">
+                    <span className="text-sm">@{comment.author}</span>
+                    <span className="text-sm">{new Date(comment.createdAt._seconds * 1000).toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-full">{comment.comment}</div>
+                    {hasPermissions && hoveredCommentId === commentId && (
+                      <Button onClick={() => handleDeleteComment(post.postId, commentId)} className="bg-transparent hover:bg-transparent cursor-pointer text-sm">
+                        🗑️
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-          <div className="flex items-center">
-            <input
-              type="text"
-              placeholder="Write a comment..."
-              value={comment}
-              onChange={handleCommentChange}
-              className="w-full p-2 mb-2 text-black text-sm"
-              style={{ maxWidth: 'calc(100% - 120px)' }}
-            />
-            <button
-              onClick={submitComment} // Make sure to define this function to handle comment submission
-              className="ml-2 py-1 px-2 bg-blue-800 hover:bg-blue-900 text-white font-bold text-sm rounded"
-              style={{ maxWidth: '100px' }}
-            >
-              Post
-            </button>
-          </div>
-        </div>
-  
-        <div className="bg-blue-700 p-4 flex justify-end items-center gap-2">
-          <Button onClick={navigateToEdit}
-            className="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
-          >
-            Update Post
-          </Button>
-          <Button onClick={deletePost}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Delete Post
-          </Button>
-        </div>
-      </Card>
-    </div>
-  );
-  
-  
-  
-  
+
+
+
+            <div className="flex w-full items-center space-x-2">
+                <Input
+                    type="text"
+                    placeholder="Write a comment..."
+                    value={comment}
+                    onChange={handleCommentChange}
+                    className="w-full"
+                />
+                <Button onClick={submitComment} >Post</Button>
+            </div>
+            </CardContent>
+            <div className=" p-4 flex justify-end items-center gap-2">
+                <Button onClick={navigateToEdit} variant="secondary">Edit</Button>
+                <Button onClick={deletePost} variant="destructive">Delete</Button>
+            </div>
+
+        </Card>
+    );
 }
 
 export default Post;

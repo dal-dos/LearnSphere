@@ -163,8 +163,7 @@ function Test() {
           "Access-Control-Allow-Origin": POSTS_BASE_URL,
         },
         body: JSON.stringify({
-          image: `Example updated image for post ${postId}`,
-          description: `Example updated description for post ${postId}`,
+          image: "https://via.placeholder.com/400x400",
         }),
       });
       console.log("Update Post ");

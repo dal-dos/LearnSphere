@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePosts, useProfile } from "../../hooks";
 import { useToast } from "@/components/ui/use-toast";
+import { Card, CardTitle, CardDescription, CardContent, CardHeader, CardFooter} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from '@radix-ui/react-dropdown-menu';
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea"
 
 function AddPost() {
   const { handleCreatePost } = usePosts(); 
@@ -40,57 +45,62 @@ function AddPost() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-lg">
-      <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Post a New Lecture</h2>
+    <Card className="max-w-4xl mx-auto p-4 shadow-md rounded-lg">
+      <h2 className="text-3xl font-semibold text-center mb-6">Post a New Lecture</h2>
       <form onSubmit={submitPost} className="space-y-6">
         <div>
-          <label htmlFor="title" className="block text-gray-700 font-medium mb-2">Title</label>
-          <input
+          <Label htmlFor="title" className="block font-medium mb-2">Title</Label>
+          <Input
             id="title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="input bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            className="input sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Title..."
           />
         </div>
         <div>
-          <label htmlFor="description" className="block text-gray-700 font-medium mb-2">Description</label>
-          <textarea
+          <Label htmlFor="description" className="block font-medium mb-2">Description</Label>
+          <Textarea
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
-            className="textarea bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            className="textarea sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             rows="4"
+            placeholder="Description..."
           />
         </div>
         <div>
-          <label htmlFor="imageLink" className="block text-gray-700 font-medium mb-2">Image Link</label>
-          <input
+          <Label htmlFor="imageLink" className="block font-medium mb-2">Image Link</Label>
+          <Input
             id="imageLink"
             type="text"
             value={imageLink}
             onChange={(e) => setImageLink(e.target.value)}
-            className="input bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            className="input border sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Thumbnail Image URL..."
           />
         </div>
         <div>
-          <label htmlFor="lectureURL" className="block text-gray-700 font-medium mb-2">Lecture URL</label>
-          <input
+          <Label htmlFor="lectureURL" className="block font-medium mb-2">Lecture URL</Label>
+          <Input
+          
             id="lectureURL"
             type="text"
             value={lectureURL}
             onChange={(e) => setLectureURL(e.target.value)}
             required
-            className="input bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            className="input sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Youtube video url..."
           />
         </div>
-        <button type="submit" className="button w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+        <Button type="submit" className="w-full">
           Post Lecture
-        </button>
+        </Button>
       </form>
-    </div>
+    </Card>
   );
 }
 

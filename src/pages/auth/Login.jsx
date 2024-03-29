@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks";
 import ErrorMessage from "@/components/ErrorMessage";
 import FormHeading from "@/components/FormHeading";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
 	const { isLoggedIn, login } = useAuth();
@@ -28,8 +28,7 @@ const Login = () => {
 	const location = useLocation();
 
 	if (isLoggedIn) {
-		redirect(location.state?.from?.pathname || "/");
-		return null;
+		return <Navigate to={location.state?.from?.pathname || "/"} />;
 	}
 
 	const onSubmit = handleSubmit(async function (formValues) {

@@ -32,7 +32,7 @@ function Profile() {
                 role: user.role || '',
             });
 
-            if (user.role === "Teacher") {
+            if (user.role === "teacher") {
                 const fetchUserPosts = async () => {
                     const posts = await handleGetPostByUserId(profile.userId);
                     setUserPosts(posts);
@@ -96,15 +96,15 @@ function Profile() {
                             </Button>
                         </Card>
                     )}
-                    {user.role === "Teacher" && (
+                    {user.role === "teacher" && (
                         <section className="mt-10">
                             <h2 className="text-xl font-semibold mb-4">User's Posts</h2>
                             {userPosts.length > 0 ? (
                                 userPosts.map((post) => (
-                                    <div key={post.id} className="bg-white shadow rounded-lg p-4 mb-6">
-                                        <h3 className="text-lg font-semibold">{post.title}</h3>
-                                        <p className="text-gray-600">{post.content}</p>
-                                    </div>
+                                    <Card key={post.id} className="shadow rounded-lg p-4 mb-6">
+                                        <CardTitle className="text-lg font-semibold">{post.title}</CardTitle>
+                                        <CardDescription className="text-gray-600">{post.description}</CardDescription>
+                                    </Card>
                                 ))
                             ) : (
                                 <p className="text-gray-600">No posts found.</p>

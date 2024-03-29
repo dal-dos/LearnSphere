@@ -29,7 +29,7 @@ export default function PostsProvider({ children }) {
 	);
 }
 
-async function getPosts(token) {
+async function getPosts(token) { //gets all posts
 	try {
 		const response = await fetch(`${POSTS_BASE_URL}/posts`, {
 			headers: {
@@ -50,7 +50,7 @@ async function getPosts(token) {
 			return [];
 		}
 
-		return data;
+		return data.post;
 	} catch (error) {
 		console.log(error);
 		return [];

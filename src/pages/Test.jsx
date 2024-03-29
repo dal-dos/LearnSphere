@@ -22,7 +22,7 @@ function Test() {
         });
         const data = await response.json();
         console.log(data);
-        setPosts(data);
+        setPosts(data.post);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
@@ -50,7 +50,7 @@ function Test() {
           return null;
         }
 
-        setProfiles(data.profiles);
+        setProfiles(data.profile);
       } catch (error) {
         console.error("Error fetching profiles:", error);
         return null;
@@ -167,11 +167,31 @@ function Test() {
           description: `Example updated description for post ${postId}`,
         }),
       });
+      console.log("Update Post ");
       const data = await response.json();
       console.log("Update Post Response:", data);
     } catch (error) {
       console.error("Error updating post:", error);
     }
+
+    const handleGetProfileById = async (userId) => {
+      try {
+        const response = await fetch(`${PROFILE_BASE_URL}/info/${userId}`, {
+          headers: {
+            Authorization: `Bearer token=${token}`,
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": PROFILE_BASE_URL,
+          },
+        });
+        const data = await response.json();
+        console.log("Get Profile by ID Response:", data);
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+    
+
+
 	};
 
 	return (

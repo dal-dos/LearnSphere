@@ -12,6 +12,8 @@ function AllPostsPage() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchResults, setSearchResults] = useState([posts]);
 
+	console.log(posts);
+
 	useEffect(() => {
 		const results = posts?.filter(
 			(post) =>

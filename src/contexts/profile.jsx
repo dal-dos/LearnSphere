@@ -20,18 +20,6 @@ export default function ProfileProvider({ children }) {
 			return;
 		}
 		async function fetchProfile() {
-			/* 
-			Profile type: 
-			{
-				"success": true,
-				"message": "Profile exists!",
-				"user": {
-					"profileImg": "xyz.jpg",
-					"username": "meharjeet1234"
-				}
-				"token": "eyJhbGci"
-			}
-			*/
 			setProfile(await getProfile(`token=${getToken()}`));
 		}
 		fetchProfile();
@@ -68,7 +56,7 @@ async function getProfile(token) {
 			return null;
 		}
 
-		return data.user;
+		return data.profile;
 	} catch (error) {
 		console.error(error);
 		return null;

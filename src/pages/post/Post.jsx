@@ -37,11 +37,13 @@ user
     async function fetchPost() {
       const fetchedPost = await getPostById(postSlug);
       setPost(fetchedPost);
+      if(user.role === "admin" || user.userId === fetchedPost?.postedBy ){
+        setPermissions(true);
+      }
     }
     fetchPost();
-    if(user.role === "admin" || user.userId === post?.postedBy ){
-      setPermissions(true);
-    }
+
+
     
     
   }, [getPostById, postSlug]);

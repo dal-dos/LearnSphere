@@ -49,7 +49,7 @@ async function getPosts(token) { //gets all posts
 			console.log("getPosts() failed: ", data.message);
 			return [];
 		}
-
+		console.log(data.post);
 		return data.post;
 	} catch (error) {
 		console.log(error);

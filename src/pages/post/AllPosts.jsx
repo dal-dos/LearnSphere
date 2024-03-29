@@ -21,8 +21,8 @@ function AllPostsPage() {
 	useEffect(() => {
 		const results = posts?.filter(
 			(post) =>
-				post?.postedBy?.toLowerCase().includes(searchTerm) ||
-				post?.description?.toLowerCase().includes(searchTerm)
+				post?.postedBy?.toString().toLowerCase().includes(searchTerm) ||
+				post?.description?.toString().toLowerCase().includes(searchTerm)
 		);
 		setSearchResults(results);
 	}, [searchTerm, posts]);

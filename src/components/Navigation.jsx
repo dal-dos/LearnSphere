@@ -20,7 +20,7 @@ function Navigation() {
 	return (
 		<nav className="flex w-full p-2 justify-between items-center">
 			<NavLink className="" to="/">
-				<img className="size-16" src="./assets/logo.jpg" alt="logo" />
+				<img className="size-16" src="./assets/learnspherelogo.png" alt="logo" />
 			</NavLink>
 
 			<ul className="flex gap-2">

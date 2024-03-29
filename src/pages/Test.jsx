@@ -189,10 +189,36 @@ function Test() {
         console.error("Error fetching profile:", error);
       }
     };
-    
+
+  };
 
 
+  const handleUpdateProfile = async (userId, profileImg= undefined, biography = undefined, nickname = undefined, role = undefined) => {
+		try {
+			const response = await fetch(`${PROFILE_BASE_URL}/edit`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer token=${token}`,
+					"Content-Type": "application/json;charset=UTF-8",
+					"Access-Control-Allow-Origin": PROFILE_BASE_URL,
+				},
+				body: JSON.stringify({
+					newProfileData: {
+						userId: userId,
+						profileImg: "https://via.placeholder.com/400x400",
+						biography: biography,
+            nickname: nickname,
+            role: role,
+					},
+				}),
+			});
+			const data = await response.json();
+			console.log("Update Profile Response:", data);
+		} catch (error) {
+			console.error("Error updating profile:", error);
+		}
 	};
+
 
 	return (
 		<div>
@@ -222,7 +248,9 @@ function Test() {
 					<ul>
 						{Object.keys(post.comments).map((commentId) => (
 							<li key={commentId}>
-								{post.comments[commentId].comment}
+                <p>Comment Author: {post.comments[commentId].author}</p>
+                <p>Comment: {post.comments[commentId].comment}</p>
+                <p>{new Date(post.comments[commentId].createdAt._seconds * 1000).toLocaleString()}</p>
 								<Button
 									onClick={() =>
 										handleDeleteComment(
@@ -248,7 +276,7 @@ function Test() {
 				{profiles.map((profile) => (
 					<div key={profile.id}>
 						<p>Username: {profile.userId}</p>
-						<p>Image: {profile.profileImg}</p>
+						<img src={profile.profileImg} alt="Profile Image" style={{width: '5%', height: 'auto'}}/>
 						<p>Bio: {profile.biography}</p>
 						<Button
 							onClick={() => handleUpdateProfile(profile.userId)}

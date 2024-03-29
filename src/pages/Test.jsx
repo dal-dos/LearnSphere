@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { POSTS_BASE_URL, PROFILE_BASE_URL } from "../constants";
 import { useProfile } from "@/hooks";
+import { Loader2 } from "lucide-react";
+
 
 import { Button } from "@/components/ui/button";
 
@@ -244,7 +246,7 @@ function Test() {
 				<Button onClick={handleCreatePost}>Create Post</Button>
 			</div>
 			{posts === null ? (
-         <p>Loading...</p>
+         <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin" /></div>
       ) : posts.map((post) => (
         <div key={post.postId}>
           <h2>Title: {post.title}</h2>

@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+
 
 function Post() {
   const { postSlug } = useParams();
@@ -102,7 +104,7 @@ const deletePost = async () => {
   };
 
   if (!post) {
-    return <div>Loading post...</div>;
+    return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin" /></div>;
   }
 
     return (

@@ -28,7 +28,7 @@ function Post() {
   const handleMouseEnter = (commentId) => {
     setHoveredCommentId(commentId);
   };
-user
+
   const handleMouseLeave = () => {
     setHoveredCommentId(null);
   };
@@ -39,14 +39,16 @@ user
       setPost(fetchedPost);
   
       if (fetchedPost) {
+        console.log(user);
         const currentUserIsAdmin = user.role === "admin";
         const currentUserIsPostOwner = fetchedPost.postedBy === user.username;
   
         setPermissions(currentUserIsAdmin || currentUserIsPostOwner);
+        console.log(hasPermissions);
       }
     }
     fetchPost();
-  }, [getPostById, postSlug, user]);
+  }, [getPostById, postSlug]);
   
   
 
@@ -150,10 +152,13 @@ const deletePost = async () => {
                 <Button onClick={submitComment} >Post</Button>
             </div>
             </CardContent>
-            <div className=" p-4 flex justify-end items-center gap-2">
+            {hasPermissions && (
+              <div className="p-4 flex justify-end items-center gap-2">
                 <Button onClick={navigateToEdit} variant="secondary">Edit</Button>
                 <Button onClick={deletePost} variant="destructive">Delete</Button>
-            </div>
+              </div>
+            )}
+
 
         </Card>
     );

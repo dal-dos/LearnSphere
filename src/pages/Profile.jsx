@@ -8,6 +8,8 @@ import { Label } from '@radix-ui/react-dropdown-menu';
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Loader2 } from "lucide-react";
+
 
 function Profile() {
     const { profile, handleUpdateProfile } = useContext(ProfileContext);
@@ -56,9 +58,7 @@ function Profile() {
     return (
         <div className="max-w-4xl mx-auto p-5">
             {!profile ? (
-                <div className="text-center py-10">
-                    <h1 className="text-xl font-semibold">Loading Profile...</h1>
-                </div>
+                <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin" /></div>
             ) : (
                 <>
                     {isEditing ? (
@@ -99,15 +99,21 @@ function Profile() {
                     {user.role === "teacher" && (
                         <section className="mt-10">
                             <h2 className="text-xl font-semibold mb-4">User's Posts</h2>
-                            {userPosts.length > 0 ? (
+                            {!userPosts ? (
+                            <div className="flex justify-center items-center h-screen">
+                                <Loader2 className="animate-spin" />
+                            </div>
+                            ) : (
+                            userPosts.length > 0 ? (
                                 userPosts.map((post) => (
-                                    <Card key={post.id} className="shadow rounded-lg p-4 mb-6">
-                                        <CardTitle className="text-lg font-semibold">{post.title}</CardTitle>
-                                        <CardDescription className="text-gray-600">{post.description}</CardDescription>
-                                    </Card>
+                                <Card key={post.id} className="shadow rounded-lg p-4 mb-6">
+                                    <CardTitle className="text-lg font-semibold">{post.title}</CardTitle>
+                                    <CardDescription className="text-gray-600">{post.description}</CardDescription>
+                                </Card>
                                 ))
                             ) : (
                                 <p className="text-gray-600">No posts found.</p>
+                            )
                             )}
                         </section>
                     )}

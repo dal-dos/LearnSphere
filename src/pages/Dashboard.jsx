@@ -1,64 +1,65 @@
-import "@/global.css";
-
+import React from "react";
 import { useProfile } from "@/hooks";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import FormHeading from "@/components/FormHeading";
+import { Card, CardTitle, CardDescription } from "@/components/ui/card";
+import "@/global.css";
 
 function Dashboard() {
-	const { profile } = useProfile();
+    const { profile } = useProfile();
 
-	return (
-		<div className="dashboard-container">
-			<div className="dashboard-header">
-				<FormHeading>
-					Welcome to LearnSphere, {profile?.userId}!
-				</FormHeading>
-				<p>
-					Explore a world of knowledge and enhance your learning
-					experience with LearnSphere.
-				</p>
-			</div>
-			<div className="dashboard-main">
-				<div className="dashboard-card">
-					<h2>Your Courses</h2>
-					<p>Resume learning where you left off.</p>
-					<Link to={`/lectures/`}>
-						<Button>Go to Courses</Button>
-					</Link>
-				</div>
-				<div className="dashboard-card">
-					<h2>Completed Courses</h2>
-					<p>
-						View the courses you've completed and access your
-						certificates.
-					</p>
-					<Button>View Certificates</Button>
-				</div>
-				<div className="dashboard-card calendar-deadlines-panel">
-					<h2>Calendar & Deadlines</h2>
-					<div className="calendar-mini">[Mini Calendar]</div>
-					<div className="upcoming-deadlines">
-						<h3>Upcoming Deadlines</h3>
-						<p>[List of deadlines]</p>
-					</div>
-				</div>
-				<div className="dashboard-card">
-					<h2>New Resources</h2>
-					<p>
-						Discover new courses, videos, and articles to further
-						your education.
-					</p>
-					<Button>Explore Resources</Button>
-				</div>
-				<div className="dashboard-card">
-					<h2>Progress Tracking</h2>
-					<p>View your learning progress across all courses.</p>
-					<Button>View Progress</Button>
-				</div>
-			</div>
-		</div>
-	);
+    return (
+        <div className="max-w-4xl mx-auto p-5">
+            <FormHeading>Welcome to LearnSphere, {profile?.userId}!</FormHeading>
+            <Card className="bg-white shadow rounded-lg p-6 mb-6 text-center">
+                <CardDescription>
+                    Explore a world of knowledge and enhance your learning experience with LearnSphere.
+                </CardDescription>
+            </Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Dashboard Cards */}
+                <Card className="shadow rounded-lg p-6 text-center">
+                    <CardTitle>Your Courses</CardTitle>
+                    <CardDescription>Resume learning where you left off.</CardDescription>
+                    <Link to="/lectures/">
+                        <Button className="mt-4">Go to Courses</Button>
+                    </Link>
+                </Card>
+
+                <Card className="shadow rounded-lg p-6 text-center">
+                    <CardTitle>Completed Courses</CardTitle>
+                    <CardDescription>
+                        View the courses you've completed and access your certificates.
+                    </CardDescription>
+                    <Button className="mt-4">View Certificates</Button>
+                </Card>
+
+                <Card className="shadow rounded-lg p-6 text-center">
+                    <CardTitle>Calendar & Deadlines</CardTitle>
+                    <div className="calendar-mini">[Mini Calendar]</div>
+                    <div className="upcoming-deadlines mt-4">
+                        <h3>Upcoming Deadlines</h3>
+                        <p>[List of deadlines]</p>
+                    </div>
+                </Card>
+
+                <Card className="shadow rounded-lg p-6 text-center">
+                    <CardTitle>New Resources</CardTitle>
+                    <CardDescription>
+                        Discover new courses, videos, and articles to further your education.
+                    </CardDescription>
+                    <Button className="mt-4">Explore Resources</Button>
+                </Card>
+
+                <Card className="shadow rounded-lg p-6 text-center">
+                    <CardTitle>Progress Tracking</CardTitle>
+                    <CardDescription>View your learning progress across all courses.</CardDescription>
+                    <Button className="mt-4">View Progress</Button>
+                </Card>
+            </div>
+        </div>
+    );
 }
 
 export default Dashboard;

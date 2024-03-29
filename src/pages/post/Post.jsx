@@ -32,21 +32,23 @@ user
   const handleMouseLeave = () => {
     setHoveredCommentId(null);
   };
+  
   useEffect(() => {
-    
     async function fetchPost() {
       const fetchedPost = await getPostById(postSlug);
       setPost(fetchedPost);
-      if(user.role === "admin" || user.userId === fetchedPost?.postedBy ){
-        setPermissions(true);
+  
+      if (fetchedPost) {
+        const currentUserIsAdmin = user.role === "admin";
+        const currentUserIsPostOwner = fetchedPost.postedBy === user.username;
+  
+        setPermissions(currentUserIsAdmin || currentUserIsPostOwner);
       }
     }
     fetchPost();
-
-
-    
-    
-  }, [getPostById, postSlug]);
+  }, [getPostById, postSlug, user]);
+  
+  
 
 
 
@@ -124,11 +126,12 @@ const deletePost = async () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="w-full">{comment.comment}</div>
-                    {hasPermissions && hoveredCommentId === commentId && (
+                    {((hasPermissions && hoveredCommentId === commentId) || (user.username === comment.author && hoveredCommentId === commentId)) && (
                       <Button onClick={() => handleDeleteComment(post.postId, commentId)} className="bg-transparent hover:bg-transparent cursor-pointer text-sm">
                         🗑️
                       </Button>
                     )}
+
                   </div>
                 </div>
               ))}

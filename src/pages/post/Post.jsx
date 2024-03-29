@@ -39,7 +39,7 @@ user
       setPost(fetchedPost);
     }
     fetchPost();
-    if(user.role === "admin" || user.userId === post.postedBy ){
+    if(user.role === "admin" || user.userId === post?.postedBy ){
       setPermissions(true);
     }
     

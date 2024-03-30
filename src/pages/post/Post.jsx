@@ -22,6 +22,7 @@ function Post() {
   const [post, setPost] = useState(null);
   const [comment, setComment] = useState(""); 
   const [hasPermissions, setPermissions] = useState(false);
+  const [currentUserIsPostOwner, setCurrentUserIsPostOwner] = useState(false);
   const [hoveredCommentId, setHoveredCommentId] = useState(null);
   const [imageExists, setImageExists] = useState(false);
   const [youtubeVideoId, setYoutubeVideoId] = useState(null); // State to store YouTube video ID
@@ -41,7 +42,7 @@ function Post() {
   
       if (fetchedPost) {
         const currentUserIsAdmin = user.role === "admin";
-        const currentUserIsPostOwner = fetchedPost.postedBy === user.username;
+        setCurrentUserIsPostOwner(fetchedPost.postedBy === user.username);
   
         setPermissions(currentUserIsAdmin || currentUserIsPostOwner);
       }
@@ -128,7 +129,13 @@ const deletePost = async () => {
         <CardHeader>
           <CardTitle className="text-3xl font-semibold text-center mb-6">{post.title}</CardTitle>
           
-            <CardDescription className="text-center"><Link to={`/users/${post.postedBy}`}>By: {post.postedBy}</Link></CardDescription>
+          <CardDescription className="text-center">
+              {currentUserIsPostOwner ? (
+                <Link to="/profile">By: {post.postedBy}</Link>
+              ) : (
+                <Link to={`/users/${post.postedBy}`}>By: {post.postedBy}</Link>
+              )}
+          </CardDescription>
           
         </CardHeader>
         <CardContent className="mt-6 mb-6">
@@ -159,7 +166,13 @@ const deletePost = async () => {
               {post.comments && Object.entries(post.comments).map(([commentId, comment]) => (
                 <div key={commentId} className="relative flex flex-col space-y-4 mb-4 hover:bg-muted" onMouseEnter={() => handleMouseEnter(commentId)} onMouseLeave={() => handleMouseLeave(commentId)} >
                   <div className="flex justify-between">
-                    <span className="text-sm"><Link to={`/users/${comment.author}`}>@{comment.author}</Link></span>
+                    <span className="text-sm">
+                    {user.username === comment.author ? (
+                      <Link to="/profile">@{comment.author}</Link>
+                    ) : (
+                      <Link to={`/users/${comment.author}`}>@{comment.author}</Link>
+                    )}
+                    </span>
                     <span className="text-sm">{new Date(comment.createdAt._seconds * 1000).toLocaleString()}</span>
                   </div>
                   <div className="flex items-center space-x-2">

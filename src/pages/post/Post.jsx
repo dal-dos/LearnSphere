@@ -11,6 +11,17 @@ import {
 	CardContent,
 	CardHeader,
 } from "@/components/ui/card";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+  } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -76,11 +87,11 @@ function Post() {
 
 	const deletePost = async () => {
 		try {
-			await handleDeletePost(post.postId);
+			await handleDeletePost(post.postId, posts);
 			toast({
 				title: "Post deleted successfully",
 			});
-			navigate("/posts");
+			await navigate("/posts"); // Await navigation after deletion
 		} catch (error) {
 			console.error("Error deleting post:", error);
 			toast({
@@ -255,9 +266,27 @@ function Post() {
 						<Pencil />
 					</Button>
 					</Link>
-					<Button onClick={deletePost} variant="destructive">
+					{/* <Button onClick={deletePost} variant="destructive">
 						<Trash2 variant="destructive" />
-					</Button>
+					</Button> */}
+					<AlertDialog>
+					<AlertDialogTrigger asChild>
+						<Button variant="destructive"><Trash2 variant="destructive" /></Button>
+					</AlertDialogTrigger>
+					<AlertDialogContent>
+						<AlertDialogHeader>
+						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This action cannot be undone. This will permanently delete this
+							post and remove the data from our servers.
+						</AlertDialogDescription>
+						</AlertDialogHeader>
+						<AlertDialogFooter>
+						<AlertDialogCancel>Cancel</AlertDialogCancel>
+						<AlertDialogAction onClick={deletePost} variant="destructive">Continue</AlertDialogAction>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+					</AlertDialog>
 				</div>
 			)}
 		</Card>

@@ -219,7 +219,7 @@ export default function PostsProvider({ children }) {
 		}
 	}, []);
 
-	const handleDeletePost = useCallback(async (postId) => {
+	const handleDeletePost = useCallback(async (postId, savedPosts) => {
 		try {
 			const response = await fetch(
 				`${POSTS_BASE_URL}/posts/delete/${postId}`,
@@ -232,12 +232,13 @@ export default function PostsProvider({ children }) {
 					},
 				}
 			);
-
+			console.log(posts);
 			const data = await response.json();
 			console.log("Delete Post Response:", data);
 			if (data.success) {
-				setPosts(posts.filter((post) => post.postId !== postId));
-				return { success: true, post: data.post };
+				const newPosts = savedPosts.filter((post) => post.postId !== postId)
+				setPosts(newPosts);
+				return { success: true, post: newPosts };
 			} else {
 				console.error("Failed to create post:", data.message);
 				return { success: false, message: data.message };

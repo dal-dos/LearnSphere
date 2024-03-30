@@ -16,7 +16,9 @@ const ProfileProvider = ({ children }) => {
 		async function fetchProfile() {
 			const tempProfile = await getProfile(`token=${getToken()}`);
 			setProfile(tempProfile);
+			console.log(tempProfile);
 		}
+		
 		fetchProfile();
 	}, [isLoggedIn, getToken]);
 

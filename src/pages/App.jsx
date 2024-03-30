@@ -15,6 +15,7 @@ import Login from "@/pages/auth/Login.jsx";
 import Signup from "@/pages/auth/Signup.jsx";
 import Unauthorized from "@/pages/auth/Unauthorized";
 import Test from "@/pages/Test.jsx";
+import User from "@/pages/User.jsx";
 
 import Layout from "@/components/Layout.jsx";
 import Navigation from "@/components/Navigation.jsx";
@@ -39,6 +40,7 @@ function App() {
 					<Route element={<RequireAuth />}>
 						<Route path="dashboard" element={<Dashboard />} />
 						<Route path="profile" element={<Profile />} />
+						<Route path="users/:userId" element={<User />} />
 						<Route path="posts" element={<Outlet />}>
 							<Route index element={<AllPosts />} />
 							<Route path="add" element={<AddPost />} />

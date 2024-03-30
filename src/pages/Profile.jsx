@@ -50,11 +50,11 @@ function Profile() {
                     setUserPosts(posts);
                 };
                 fetchUserPosts();
-                
-                isValidImage(profile.profileImg).then(valid => {
-                    setImageExists(valid);
-                });
             }
+
+            isValidImage(profile.profileImg).then(valid => {
+                setImageExists(valid);
+            });
         }
     }, [profile, handleGetPostByUserId, user.role]);
     
@@ -118,12 +118,12 @@ function Profile() {
                             ) : (
                             userPosts.length > 0 ? (
                                 userPosts.map((post) => (
-                                <Link to={`/posts/${post.postId}`} className="w-full">
                                     <Card key={post.postId} className="shadow rounded-lg p-4 mb-6 hover:bg-muted" >
+                                        <Link to={`/posts/${post.postId}`} className="w-full">
                                         <CardTitle className="text-lg font-semibold">{post.title}</CardTitle>
                                         <CardDescription className="text-gray-600">{post.description}</CardDescription>
+                                        </Link>
                                     </Card>
-                                </Link>
                                 ))
                             ) : (
                                 <p className="text-gray-600">No posts found.</p>

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { PROFILE_BASE_URL } from "../constants";
 import { useAuth } from "@/hooks";
 
@@ -73,8 +73,33 @@ const ProfileProvider = ({ children }) => {
         }
     };
 
+    const handleGetProfileById = async (userId) => {
+        try {
+            const response = await fetch(`${PROFILE_BASE_URL}/info/${userId}`, {
+                headers: {
+                    Authorization: `Bearer token=${getToken()}`,
+                    "Content-Type": "application/json;charset=UTF-8",
+                    "Access-Control-Allow-Origin": PROFILE_BASE_URL,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch profile');
+            }
+            const data = await response.json();
+            if (!data || data.success === false) {
+                throw new Error(data.message || "Profile fetch failed");
+            }
+
+            return data.profile;
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+            return null;
+        }
+    };
+
     return (
-        <ProfileContext.Provider value={{ profile, handleUpdateProfile }}>
+        <ProfileContext.Provider value={{ profile, handleUpdateProfile, handleGetProfileById }}>
             {children}
         </ProfileContext.Provider>
     );

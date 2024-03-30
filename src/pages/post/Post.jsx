@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2, Pencil, Settings, SendHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Post() {
@@ -247,9 +247,9 @@ function Post() {
 														commentId
 													)
 												}
-												className="cursor-pointer bg-transparent text-sm hover:bg-transparent"
+												className="cursor-pointer text-sm bg-transparent hover:bg-transparent"
 											>
-												🗑️
+												<Trash2 color="red" />
 											</Button>
 										)}
 									</div>
@@ -266,16 +266,16 @@ function Post() {
 						onChange={handleCommentChange}
 						className="w-full"
 					/>
-					<Button onClick={submitComment}>Post</Button>
+					<Button onClick={submitComment}><SendHorizontal /></Button>
 				</div>
 			</CardContent>
 			{hasPermissions && (
 				<div className="flex items-center justify-end gap-2 p-4">
 					<Button onClick={navigateToEdit} variant="secondary">
-						Edit
+            <Pencil />
 					</Button>
 					<Button onClick={deletePost} variant="destructive">
-						Delete
+						<Trash2  variant="destructive"/>
 					</Button>
 				</div>
 			)}
@@ -284,3 +284,5 @@ function Post() {
 }
 
 export default Post;
+
+

@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useProfile } from "@/hooks";
 import { useNavigate } from "react-router-dom";
+import { Loader2, Trash2, Pencil, Settings, SendHorizontal, SquarePen } from "lucide-react";
 
 function AllPostsPage() {
 	const { posts } = usePosts();
@@ -60,7 +61,7 @@ function AllPostsPage() {
 								onClick={addPost}
 								disabled={!hasPermissions}
 							>
-								Create Post
+								<SquarePen />
 							</Button>
 						</div>
 						<div className="mt-2 flex flex-col items-center justify-center gap-2">
@@ -95,7 +96,7 @@ function PostPreview({ post }) {
 				<CardFooter className="flex justify-between">
 					<div>
 						<CardDescription>
-							Teacher: {post.postedBy}
+							{post.postedBy}
 						</CardDescription>
 					</div>
 					<div>

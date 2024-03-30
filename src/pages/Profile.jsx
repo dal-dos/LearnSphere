@@ -15,8 +15,9 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2 } from "lucide-react";
+import { Loader2, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
+
 
 function Profile() {
 	const { profile, handleUpdateProfile } = useContext(ProfileContext);
@@ -165,7 +166,7 @@ function Profile() {
                                     className="rounded px-4 py-2 font-bold text-inverted hover:bg-muted bg-transparant"
                                     style={{ fontSize: "1.6rem" }}
                                 >
-                                    🖋️
+                                    <Pencil/>
                                 </Button>
                             </div>
 						</Card>

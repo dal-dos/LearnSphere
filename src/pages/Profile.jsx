@@ -58,10 +58,12 @@ function Profile() {
 						const posts = await handleGetPostByUserId(
 							profile.userId
 						);
+						profile.posts = posts;
 						setUserPosts(posts);
 					};
 					fetchUserPosts();
 				} else {
+					console.log("from cache");
 					setUserPosts(profile.posts);
 				}
 			}

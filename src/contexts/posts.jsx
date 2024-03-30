@@ -47,6 +47,13 @@ export default function PostsProvider({ children }) {
 
 			const data = await response.json();
 			console.log(data.post);
+			if(data.post && profile){
+				console.log("hi");
+				if (profile.role === "teacher") {
+					const postsWithUserId = posts.filter(post => post.postedBy === profile.userId);
+					profile.posts = postsWithUserId;
+				}
+			}
 			return data.post;
 		} catch (error) {
 			console.error("Error fetching posts:", error);

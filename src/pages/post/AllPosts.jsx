@@ -1,6 +1,7 @@
 import { usePosts, useAuth } from "@/hooks";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { ProfileContext } from "@/contexts/profile";
 import FormHeading from "@/components/FormHeading";
 import {
 	Card,
@@ -17,7 +18,7 @@ import { SquarePen } from "lucide-react";
 function AllPostsPage() {
 	const { posts } = usePosts();
 	const { user } = useAuth();
-
+	const { profile } = useContext(ProfileContext);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchResults, setSearchResults] = useState([]);
 	const [hasPermissions, setPermissions] = useState(false);
@@ -40,6 +41,13 @@ function AllPostsPage() {
 		setSearchResults(results);
 
 		setPermissions(user.role !== "student");
+
+		if (profile) {
+			if(profile.role === "teacher"){
+				const postsWithUserId = posts.filter(post => post.postedBy === profile.userId);
+				profile.posts = postsWithUserId;
+			}
+		}
 	}, [searchTerm, posts]);
 
 	useEffect(() => {}, [posts]);

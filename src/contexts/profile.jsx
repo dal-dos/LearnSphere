@@ -6,7 +6,7 @@ export const ProfileContext = createContext();
 
 const ProfileProvider = ({ children }) => {
 	const { isLoggedIn, getToken } = useAuth();
-	const { handleGetPostByUserId } = usePosts();
+	const { posts } = usePosts();
 	const [profile, setProfile] = useState(null);
 
 	useEffect(() => {
@@ -15,7 +15,6 @@ const ProfileProvider = ({ children }) => {
 		}
 		async function fetchProfile() {
 			const tempProfile = await getProfile(`token=${getToken()}`);
-			const posts = await handleGetPostByUserId(tempProfile.userId);
 			setProfile(tempProfile);
 		}
 		fetchProfile();

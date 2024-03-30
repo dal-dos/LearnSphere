@@ -283,7 +283,7 @@ function Post() {
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 						<AlertDialogCancel>Cancel</AlertDialogCancel>
-						<AlertDialogAction onClick={deletePost} variant="destructive">Continue</AlertDialogAction>
+						<AlertDialogAction onClick={deletePost} variant="destructive" style={{ backgroundColor: 'red' }}>Continue</AlertDialogAction>
 						</AlertDialogFooter>
 					</AlertDialogContent>
 					</AlertDialog>

@@ -68,6 +68,11 @@ function Profile() {
         setIsEditing(false);
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setEditProfile(prev => ({ ...prev, [name]: value }));
+    };
+
     return (
         <div className="max-w-4xl mx-auto p-5">
             {!profile ? (
@@ -81,7 +86,7 @@ function Profile() {
                                     <Label className="block font-bold mb-2" htmlFor="biography">
                                         Biography
                                     </Label>
-                                    <Textarea id="biography" name="biography" rows="3" placeholder="Write your biography..." className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" value={editProfile.biography} onChange={handleChange}></Textarea>
+                                    <Textarea id="biography" name="biography" rows="3" placeholder="Write your biography..." className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" value={editProfile.biography} onChange={handleChange} ></Textarea>
                                 </div>
                                 
                                 <div className="flex items-center justify-between">

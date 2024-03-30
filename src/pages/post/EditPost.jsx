@@ -56,22 +56,39 @@ function EditPost() {
 	const submitChanges = async (e) => {
 		e.preventDefault();
 		try {
-			await handleUpdatePost(postSlug, {
-				...post,
-			});
-
-			toast({ title: "Updated Post" });
-			navigate(`/posts`);
+			const payload = {
+				title: post.title,
+				description: post.description,
+				image: post.imageLink, 
+				lectureURL: post.lectureURL,
+			};
+	
+			const result = await handleUpdatePost(postSlug, payload);
+		
+			if (result.success) {
+				toast({ title: "Updated Post" });
+				navigate(`/posts`);
+			} else {
+				
+				console.error("Failed to update post:", result.message);
+				toast({
+					variant: "destructive",
+					title: "Failed to update post",
+					description: result.message || "An error occurred while trying to update the post.",
+				});
+			}
 		} catch (error) {
+			
 			console.error("Failed to update post:", error);
 			toast({
 				variant: "destructive",
 				title: "Failed to update post",
-				description:
-					"An error occurred while trying to update the post.",
+				description: error.message || "An unexpected error occurred while trying to update the post.",
 			});
 		}
 	};
+	
+	
 
 	return (
 		<Card className="mx-auto max-w-4xl rounded-lg p-4 shadow-md">

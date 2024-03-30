@@ -11,6 +11,7 @@ import { Label } from '@radix-ui/react-dropdown-menu';
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function Post() {
   const { postSlug } = useParams();
@@ -126,7 +127,9 @@ const deletePost = async () => {
       <Card className="max-w-4xl mx-auto p-4 shadow-md rounded-lg">
         <CardHeader>
           <CardTitle className="text-3xl font-semibold text-center mb-6">{post.title}</CardTitle>
-          <CardDescription className="text-center">By: {post.postedBy}</CardDescription>
+          
+            <CardDescription className="text-center"><Link to={`/users/${post.postedBy}`}>By: {post.postedBy}</Link></CardDescription>
+          
         </CardHeader>
         <CardContent className="mt-6 mb-6">
           {imageExists && (
@@ -150,7 +153,50 @@ const deletePost = async () => {
 
           <CardDescription className="mt-4">{new Date(post.createdAt._seconds * 1000).toLocaleString()}</CardDescription>
         </CardContent>
-      </Card>
+        <CardContent>
+            <Label className="text-lg font-bold mb-3">Comments</Label>
+            <div>
+              {post.comments && Object.entries(post.comments).map(([commentId, comment]) => (
+                <div key={commentId} className="relative flex flex-col space-y-4 mb-4 hover:bg-muted" onMouseEnter={() => handleMouseEnter(commentId)} onMouseLeave={() => handleMouseLeave(commentId)} >
+                  <div className="flex justify-between">
+                    <span className="text-sm"><Link to={`/users/${comment.author}`}>@{comment.author}</Link></span>
+                    <span className="text-sm">{new Date(comment.createdAt._seconds * 1000).toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-full">{comment.comment}</div>
+                    {((hasPermissions && hoveredCommentId === commentId) || (user.username === comment.author && hoveredCommentId === commentId)) && (
+                      <Button onClick={() => handleDeleteComment(post.postId, commentId)} className="bg-transparent hover:bg-transparent cursor-pointer text-sm">
+                        🗑️
+                      </Button>
+                    )}
+
+                  </div>
+                </div>
+              ))}
+            </div>
+
+
+
+            <div className="flex w-full items-center space-x-2">
+                <Input
+                    type="text"
+                    placeholder="Write a comment..."
+                    value={comment}
+                    onChange={handleCommentChange}
+                    className="w-full"
+                />
+                <Button onClick={submitComment} >Post</Button>
+            </div>
+            </CardContent>
+            {hasPermissions && (
+              <div className="p-4 flex justify-end items-center gap-2">
+                <Button onClick={navigateToEdit} variant="secondary">Edit</Button>
+                <Button onClick={deletePost} variant="destructive">Delete</Button>
+              </div>
+            )}
+
+
+        </Card>
     );
 }
 

@@ -24,6 +24,7 @@ function Profile() {
     const [userPosts, setUserPosts] = useState([]);
 
 	const { user } = useAuth(); 
+    const [imageExists, setImageExists] = useState(false);
 
     useEffect(() => {
         if (profile) {
@@ -33,13 +34,24 @@ function Profile() {
                 biography: profile.biography || '',
                 role: user.role,
             });
-
+            function isValidImage(src) {
+                return new Promise(resolve => {
+                    const img = new Image();
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                    img.src = editProfile.profileImg;
+                });
+            }
             if (user.role === "teacher") {
                 const fetchUserPosts = async () => {
                     const posts = await handleGetPostByUserId(profile.userId);
                     setUserPosts(posts);
                 };
                 fetchUserPosts();
+
+                isValidImage().then(valid => {
+                    setImageExists(valid);
+                });
             }
         }
     }, [profile, handleGetPostByUserId]);
@@ -83,10 +95,13 @@ function Profile() {
                         </Card>
                     ) : (
                         <Card className="shadow rounded-lg p-6 text-center">
-                                <Avatar className="rounded-full h-32 w-32 object-cover mx-auto">
+                            <Avatar className="rounded-full h-32 w-32 object-cover mx-auto">
+                                {imageExists ? (
                                     <AvatarImage src={editProfile.profileImg} alt="Profile Image" />
-                                    <AvatarFallback>CN</AvatarFallback>
-                                </Avatar>
+                                ) : (
+                                    <AvatarImage src="/assets/defaultuser.png" alt="Default Profile Image" />
+                                )}
+                            </Avatar>
                             <CardTitle className="text-lg font-semibold mt-2">{editProfile.userId}</CardTitle>
                             <CardDescription>{editProfile.role}</CardDescription>
                             <CardDescription>{editProfile.biography}</CardDescription>

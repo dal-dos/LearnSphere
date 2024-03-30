@@ -12,9 +12,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useProfile } from "@/hooks";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Trash2, Pencil, Settings, SendHorizontal, SquarePen } from "lucide-react";
+import { SquarePen } from "lucide-react";
 
 function AllPostsPage() {
 	const { posts } = usePosts();
@@ -22,10 +21,7 @@ function AllPostsPage() {
 
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchResults, setSearchResults] = useState([]);
-	const { profile } = useProfile();
 	const [hasPermissions, setPermissions] = useState(false);
-
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		const results = posts
@@ -42,9 +38,7 @@ function AllPostsPage() {
 	}, [searchTerm, posts]);
 	
 
-	const addPost = () => {
-		navigate("/posts/add");
-	};
+	useEffect(() => {}, [posts]);
 
 	return (
 		<>
@@ -61,11 +55,10 @@ function AllPostsPage() {
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
 							/>
-							<Button
-								onClick={addPost}
-								disabled={!hasPermissions}
-							>
-								<SquarePen />
+							<Button disabled={!hasPermissions} asChild>
+								<Link to="/posts/add">
+									<SquarePen />
+								</Link>
 							</Button>
 						</div>
 						<div className="mt-2 flex flex-col items-center justify-center gap-2">
@@ -99,9 +92,7 @@ function PostPreview({ post }) {
 				</CardContent>
 				<CardFooter className="flex justify-between">
 					<div>
-						<CardDescription>
-							{post.postedBy}
-						</CardDescription>
+						<CardDescription>{post.postedBy}</CardDescription>
 					</div>
 					<div>
 						<CardDescription className="text-sm text-gray-500">

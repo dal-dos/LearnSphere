@@ -1,219 +1,130 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { usePosts, useProfile } from "../../hooks";
+import { usePosts } from "../../hooks";
 import { useToast } from "@/components/ui/use-toast";
-import {
-	Card,
-	CardTitle,
-	CardDescription,
-	CardContent,
-	CardHeader,
-	CardFooter,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { cn } from "@/lib/utils";
+import FormHeading from "@/components/FormHeading";
+import ErrorMessage from "@/components/ErrorMessage";
+
+const youtubeRegex = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
 
 function AddPost() {
 	const { handleCreatePost } = usePosts();
-	const { profile } = useProfile();
 
-	const [title, setTitle] = useState("");
-	const [description, setDescription] = useState("");
-	const [imageLink, setImageLink] = useState("");
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		defaultValues: {
+			title: "",
+			description: "",
+			image: "",
+			lectureURL: "",
+		},
+	});
 
-	const [lectureURL, setLectureURL] = useState("");
 	const navigate = useNavigate();
 	const { toast } = useToast();
 
-	// const submitPost = async (e) => {
-	//   e.preventDefault();
+	const onSubmit = handleSubmit(async (data) => {
+		const response = await handleCreatePost(data);
 
-	//   try {
-	//     await handleCreatePost({
-	//       userId: profile.userId,
-	//       title,
-	//       description,
-	//       image: imageLink,
-	//       lectureURL,
-	//     });
-
-	//     toast({title: "Created Post"});
-	//     navigate('/posts');
-	//   } catch (error) {
-	//     console.error('Failed to create post:', error);
-	//     toast({
-	//       variant: "destructive",
-	//       title: "Failed to create post",
-	//       description: "An error occurred while trying to delete the post.",
-	//     });
-	//   }
-	// };
-
-	const submitPost = async (e) => {
-		e.preventDefault();
-
-		// Validate image link
-		try {
-			const img = new Image();
-			img.onload = () => {
-				// Image loaded successfully, proceed with submitting the form
-				try {
-					handleCreatePost({
-						userId: profile.userId,
-						title,
-						description,
-						image: imageLink,
-						lectureURL,
-					})
-						.then((res) => {
-							if (res.success) {
-								toast({
-									title: "Created Post",
-									description: res.message,
-								});
-								navigate("/posts");
-							} else {
-								toast({
-									variant: "destructive",
-									title: "Failed to create post",
-									description:
-										res.message ||
-										"Failed to create post. Please try again",
-								});
-							}
-						})
-						.catch((error) => {
-							console.error("Failed to create post:", error);
-							toast({
-								variant: "destructive",
-								title: "Failed to create post",
-								description:
-									error.message ||
-									"Failed to create post. Please try again",
-							});
-						});
-				} catch (error) {
-					console.error("Failed to create post:", error);
-					toast({
-						variant: "destructive",
-						title: "Failed to create post",
-						description:
-							error.message ||
-							"Failed to create post. Please try again",
-					});
-				}
-			};
-			img.onerror = () => {
-				// Image failed to load, show error message
-				toast({
-					variant: "destructive",
-					title: "Invalid image link",
-					description: "Please provide a valid image link.",
-				});
-			};
-			img.src = imageLink;
-		} catch (error) {
-			console.error("Error validating image link:", error);
+		if (response.success) {
+			toast({
+				title: "Post Created",
+				description: response.message,
+			});
+			navigate("/posts");
+		} else {
 			toast({
 				variant: "destructive",
-				title: "Failed to validate image link",
-				description:
-					"An error occurred while validating the image link.",
+				title: "Failed to create post",
+				description: response.message,
 			});
 		}
-
-		// Validate YouTube video URL
-		const youtubeRegex =
-			/^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
-		if (!youtubeRegex.test(lectureURL)) {
-			toast({
-				variant: "destructive",
-				title: "Invalid YouTube video URL",
-				description: "Please provide a valid YouTube video URL.",
-			});
-			return;
-		}
-
-		// If both image link and YouTube video URL are valid, the form will be submitted
-	};
+	});
 
 	return (
-		<Card className="mx-auto max-w-4xl rounded-lg p-4 shadow-md">
-			<h2 className="mb-6 text-center text-3xl font-semibold">
-				Post a New Lecture
-			</h2>
-			<form onSubmit={submitPost} className="space-y-6">
-				<div>
-					<Label htmlFor="title" className="mb-2 block font-medium">
-						Title
-					</Label>
-					<Input
-						id="title"
-						type="text"
-						value={title}
-						onChange={(e) => setTitle(e.target.value)}
-						required
-						className="input block w-full rounded-lg p-2.5 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-						placeholder="Title..."
-					/>
-				</div>
-				<div>
-					<Label
-						htmlFor="description"
-						className="mb-2 block font-medium"
-					>
-						Description
-					</Label>
-					<Textarea
-						id="description"
-						value={description}
-						onChange={(e) => setDescription(e.target.value)}
-						required
-						className="textarea block w-full rounded-lg p-2.5 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-						rows="4"
-						placeholder="Description..."
-					/>
-				</div>
-				<div>
-					<Label
-						htmlFor="imageLink"
-						className="mb-2 block font-medium"
-					>
-						Image Link
-					</Label>
-					<Input
-						id="imageLink"
-						type="text"
-						value={imageLink}
-						onChange={(e) => setImageLink(e.target.value)}
-						className="input block w-full rounded-lg border p-2.5 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-						placeholder="Thumbnail Image URL..."
-					/>
-				</div>
-				<div>
-					<Label
-						htmlFor="lectureURL"
-						className="mb-2 block font-medium"
-					>
-						Lecture URL
-					</Label>
-					<Input
-						id="lectureURL"
-						type="text"
-						value={lectureURL}
-						onChange={(e) => setLectureURL(e.target.value)}
-						required
-						className="input block w-full rounded-lg p-2.5 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-						placeholder="Youtube video url..."
-					/>
-				</div>
-				<Button type="submit" className="w-full">
-					Post Lecture
-				</Button>
-			</form>
-		</Card>
+		<>
+			<Card className="mx-auto max-w-4xl rounded-lg p-4 shadow-md">
+				<FormHeading>Post a New Lecture</FormHeading>
+				<form onSubmit={onSubmit} className="space-y-6">
+					<div className="space-y-2">
+						<Label htmlFor="title">Title</Label>
+						<Input
+							{...register("title", {
+								required: "Title is required",
+							})}
+							placeholder="Title..."
+							className={cn(
+								errors.title
+									? "focus-visible:ring-destructive"
+									: null
+							)}
+						/>
+						<ErrorMessage error={errors.title} />
+					</div>
+					<div className="space-y-2">
+						<Label htmlFor="description">Description</Label>
+						<Input
+							{...register("description", {
+								required: "Description is required",
+							})}
+							placeholder="Description..."
+							className={cn(
+								errors.description
+									? "focus-visible:ring-destructive"
+									: null
+							)}
+						/>
+						<ErrorMessage error={errors.description} />
+					</div>
+					<div className="space-y-2">
+						<Label htmlFor="image">Image</Label>
+						<Input
+							{...register("image", {
+								required: "Image is required",
+							})}
+							placeholder="Image..."
+							className={cn(
+								errors.image
+									? "focus-visible:ring-destructive"
+									: null
+							)}
+						/>
+						<ErrorMessage error={errors.image} />
+					</div>
+					<div className="space-y-2">
+						<Label htmlFor="lectureURL">Lecture URL</Label>
+						<Input
+							{...register("lectureURL", {
+								required: "Lecture URL is required",
+								pattern: {
+									value: youtubeRegex,
+									message: "Invalid YouTube URL",
+								},
+							})}
+							placeholder="Lecture URL..."
+							className={cn(
+								errors.lectureURL
+									? "focus-visible:ring-destructive"
+									: null
+							)}
+						/>
+						<ErrorMessage error={errors.lectureURL} />
+					</div>
+					<Button type="submit" className="w-full">
+						Post Lecture
+					</Button>
+				</form>
+			</Card>
+		</>
 	);
 }
 

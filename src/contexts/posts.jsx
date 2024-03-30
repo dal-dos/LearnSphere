@@ -1,4 +1,4 @@
-import { useState, createContext, useEffect } from "react";
+import { useState, createContext, useEffect, useCallback } from "react";
 import { useAuth, useProfile } from "@/hooks";
 import { POSTS_BASE_URL } from "../constants";
 
@@ -29,7 +29,8 @@ export default function PostsProvider({ children }) {
 		fetchPosts();
 	}, [isLoggedIn, getToken]);
 
-	const getPosts = async (token) => {
+	// POST RELATED FUNCTIONS ---------------------------------------------
+	const getPosts = useCallback(async (token) => {
 		try {
 			const response = await fetch(`${POSTS_BASE_URL}/posts`, {
 				headers: {
@@ -45,14 +46,15 @@ export default function PostsProvider({ children }) {
 			}
 
 			const data = await response.json();
+			console.log(data.post);
 			return data.post;
 		} catch (error) {
 			console.error("Error fetching posts:", error);
 			return [];
 		}
-	};
+	}, []);
 
-	const getPostById = async (postId) => {
+	const getPostById = useCallback(async (postId) => {
 		try {
 			const response = await fetch(`${POSTS_BASE_URL}/posts/${postId}`, {
 				headers: {
@@ -70,9 +72,114 @@ export default function PostsProvider({ children }) {
 		} catch (error) {
 			console.error("Error fetching post:", error);
 		}
-	};
+	}, []);
 
-	const handleAddComment = async (postId, commentText) => {
+	const handleCreatePost = useCallback(
+		async ({ userId, title, description, image, lectureURL }) => {
+			try {
+				const response = await fetch(`${POSTS_BASE_URL}/posts/create`, {
+					method: "POST",
+					headers: {
+						Authorization: `Bearer token=${getToken()}`,
+						"Content-Type": "application/json;charset=UTF-8",
+						"Access-Control-Allow-Origin": POSTS_BASE_URL,
+					},
+					body: JSON.stringify({
+						userId,
+						title,
+						description,
+						image,
+						lectureURL,
+					}),
+				});
+
+				console.log("Response:", response);
+				const data = await response.json();
+				console.log("data:", data);
+
+				if (data.success) {
+					setPosts((posts) => [data.post, ...posts]);
+					return {
+						success: true,
+						message: "",
+						post: data.post,
+					};
+				} else {
+					console.error("Failed to create post:", data.message);
+					return { success: false, message: data.message };
+				}
+			} catch (error) {
+				console.error("Error creating post:", error);
+			}
+		},
+		[]
+	);
+
+	const handleUpdatePost = useCallback(
+		async (postId, { title, description, image, lectureURL }) => {
+			try {
+				const response = await fetch(
+					`${POSTS_BASE_URL}/posts/update/${postId}`,
+					{
+						method: "PUT",
+						headers: {
+							Authorization: `Bearer token=${getToken()}`,
+							"Content-Type": "application/json;charset=UTF-8",
+							"Access-Control-Allow-Origin": POSTS_BASE_URL,
+						},
+						body: JSON.stringify({
+							title,
+							description,
+							image,
+							lectureURL,
+						}),
+					}
+				);
+				const data = await response.json();
+
+				if (data.success) {
+					setPosts((posts) => [data.post, ...posts]);
+					return {
+						success: true,
+						message: data.message,
+						post: data.post,
+					};
+				} else {
+					console.error("Failed to update post:", data.message);
+					return { success: false, message: data.message };
+				}
+			} catch (error) {
+				console.error("Error updating post:", error);
+			}
+		},
+		[]
+	);
+
+	const handleGetPostByUserId = useCallback(async (userId) => {
+		try {
+			const response = await fetch(
+				`${POSTS_BASE_URL}/posts/user/${userId}`,
+				{
+					headers: {
+						Authorization: `Bearer token=${getToken()}`,
+						"Content-Type": "application/json;charset=UTF-8",
+						"Access-Control-Allow-Origin": POSTS_BASE_URL,
+					},
+				}
+			);
+			const data = await response.json();
+			if (userId === profile.userId) {
+				profile.posts = data.post;
+			}
+			return data.post;
+		} catch (error) {
+			console.error("Error fetching posts by user ID:", error);
+		}
+	}, []);
+
+	// COMMENT RELATED FUNCTIONS ---------------------------------------------
+
+	const handleAddComment = useCallback(async (postId, commentText) => {
 		try {
 			const response = await fetch(
 				`${POSTS_BASE_URL}/posts/${postId}/addcomment`,
@@ -90,12 +197,25 @@ export default function PostsProvider({ children }) {
 				}
 			);
 			const data = await response.json();
+
+			setPosts((posts) => {
+				const updatedPosts = posts.map((post) => {
+					if (post.id === postId) {
+						return {
+							...post,
+							comments: [...post.comments, data.commentText],
+						};
+					}
+					return post;
+				});
+				return updatedPosts;
+			});
 		} catch (error) {
 			console.error("Error adding comment:", error);
 		}
-	};
+	}, []);
 
-	const handleDeletePost = async (postId) => {
+	const handleDeletePost = useCallback(async (postId) => {
 		try {
 			const response = await fetch(
 				`${POSTS_BASE_URL}/posts/delete/${postId}`,
@@ -121,9 +241,9 @@ export default function PostsProvider({ children }) {
 		} catch (error) {
 			console.error("Error deleting post:", error);
 		}
-	};
+	}, []);
 
-	const handleDeleteComment = async (postId, commentId) => {
+	const handleDeleteComment = useCallback(async (postId, commentId) => {
 		try {
 			const response = await fetch(
 				`${POSTS_BASE_URL}/posts/${postId}/comments/${commentId}/delete`,
@@ -157,105 +277,7 @@ export default function PostsProvider({ children }) {
 		} catch (error) {
 			console.error("Error deleting comment:", error);
 		}
-	};
-
-	const handleCreatePost = async ({
-		userId,
-		title,
-		description,
-		image,
-		lectureURL,
-	}) => {
-		try {
-			const response = await fetch(`${POSTS_BASE_URL}/posts/create`, {
-				method: "POST",
-				headers: {
-					Authorization: `Bearer token=${getToken()}`,
-					"Content-Type": "application/json;charset=UTF-8",
-					"Access-Control-Allow-Origin": POSTS_BASE_URL,
-				},
-				body: JSON.stringify({
-					userId,
-					title,
-					description,
-					image,
-					lectureURL,
-				}),
-			});
-
-			const data = await response.json();
-			console.log(data);
-			if (data.success) {
-				setPosts((posts) => [data.post, ...posts]);
-				return { success: true, post: data.post };
-			} else {
-				console.error("Failed to create post:", data.message);
-				return { success: false, message: data.message };
-			}
-		} catch (error) {
-			console.error("Error creating post:", error);
-		}
-	};
-
-	const handleUpdatePost = async (
-		postId,
-		{ title, description, image, lectureURL }
-	) => {
-		try {
-			const response = await fetch(
-				`${POSTS_BASE_URL}/posts/update/${postId}`,
-				{
-					method: "PUT",
-					headers: {
-						Authorization: `Bearer token=${getToken()}`,
-						"Content-Type": "application/json;charset=UTF-8",
-						"Access-Control-Allow-Origin": POSTS_BASE_URL,
-					},
-					body: JSON.stringify({
-						title,
-						description,
-						image,
-						lectureURL,
-					}),
-				}
-			);
-			const data = await response.json();
-			console.log(data);
-			console.log("Update Post Response:", data);
-
-			if (data.success) {
-				setPosts((posts) => [data.post, ...posts]);
-				return { success: true, post: data.post };
-			} else {
-				console.error("Failed to update post:", data.message);
-				return { success: false, message: data.message };
-			}
-		} catch (error) {
-			console.error("Error updating post:", error);
-		}
-	};
-
-	const handleGetPostByUserId = async (userId) => {
-		try {
-			const response = await fetch(
-				`${POSTS_BASE_URL}/posts/user/${userId}`,
-				{
-					headers: {
-						Authorization: `Bearer token=${getToken()}`,
-						"Content-Type": "application/json;charset=UTF-8",
-						"Access-Control-Allow-Origin": POSTS_BASE_URL,
-					},
-				}
-			);
-			const data = await response.json();
-			if (userId === profile.userId) {
-				profile.posts = data.post;
-			}
-			return data.post;
-		} catch (error) {
-			console.error("Error fetching posts by user ID:", error);
-		}
-	};
+	}, []);
 
 	return (
 		<PostsContext.Provider

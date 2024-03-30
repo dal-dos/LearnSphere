@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { POSTS_BASE_URL } from "../../constants";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { usePosts } from "@/hooks";
@@ -11,13 +10,11 @@ import {
 	CardDescription,
 	CardContent,
 	CardHeader,
-	CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Loader2, Trash2, Pencil, Settings, SendHorizontal } from "lucide-react";
+import { Loader2, Trash2, Pencil, SendHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Post() {
@@ -35,10 +32,7 @@ function Post() {
 	const [post, setPost] = useState(null);
 	const [comment, setComment] = useState("");
 	const [hasPermissions, setPermissions] = useState(false);
-	const [currentUserIsPostOwner, setCurrentUserIsPostOwner] = useState(false);
 	const [hoveredCommentId, setHoveredCommentId] = useState(null);
-	const [imageExists, setImageExists] = useState(false);
-	const [youtubeVideoId, setYoutubeVideoId] = useState(null); // State to store YouTube video ID
 
 	const handleMouseEnter = (commentId) => {
 		setHoveredCommentId(commentId);
@@ -49,52 +43,36 @@ function Post() {
 	};
 
 	useEffect(() => {
-    
 		async function fetchPost() {
-      let fetchedPost;
-      const foundPost = posts.find(post => post.postId === postSlug);
-      if (foundPost) {
-          fetchedPost = foundPost;
-          setPost(foundPost);
-      } else {
-          fetchedPost = await getPostById(postSlug);
-          setPost(fetchedPost);
-      }
-			
-			if (fetchedPost) {
-				const currentUserIsAdmin = user.role === "admin";
-				setCurrentUserIsPostOwner(
-					fetchedPost.postedBy === user.username
-				);
-
-				setPermissions(currentUserIsAdmin || fetchedPost.postedBy === user.username);
+			let fetchedPost;
+			const foundPost = posts.find((post) => post.postId === postSlug);
+			if (foundPost) {
+				fetchedPost = foundPost;
+			} else {
+				// When opening a post not fetched on all lectures page
+				fetchedPost = await getPostById(postSlug);
 			}
 
-			function isValidImage(src) {
-				return new Promise((resolve) => {
-					const img = new Image();
-					img.onload = () => resolve(true);
-					img.onerror = () => resolve(false);
-					img.src = src;
-				});
+			setPost(fetchedPost);
+			if (!fetchedPost) {
+				return;
 			}
 
-			if (fetchedPost && fetchedPost.image) {
-				isValidImage(fetchedPost.image).then((valid) => {
-					setImageExists(valid);
-				});
-			}
-
-			// Check if lectureURL is a valid YouTube video and extract video ID
-			const youtubeRegex =
-				/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-			const match = fetchedPost.lectureURL.match(youtubeRegex);
-			if (match) {
-				setYoutubeVideoId(match[1]);
-			}
+			setPermissions(
+				user.role === "admin" || fetchedPost.postedBy === user.username
+			);
 		}
 		fetchPost();
 	}, [getPostById, postSlug]);
+
+	function getVideoId(post) {
+		const youtubeRegex =
+			/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+		const match = post.lectureURL.match(youtubeRegex);
+		if (match) {
+			return match[1];
+		} else return null;
+	}
 
 	const deletePost = async () => {
 		try {
@@ -158,7 +136,7 @@ function Post() {
 				</CardTitle>
 
 				<CardDescription className="text-center">
-					{currentUserIsPostOwner ? (
+					{post.postedBy === user.username ? (
 						<Link to="/profile">By: {post.postedBy}</Link>
 					) : (
 						<Link to={`/users/${post.postedBy}`}>
@@ -168,20 +146,20 @@ function Post() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent className="mb-6 mt-6">
-				{imageExists && (
+				{post?.image && (
 					<img src={post.image} alt="Thumbnail" className="mb-4" />
 				)}
 
-				<CardDescription className="mb-4" style={{ fontSize: "1.2em" }}>
+				<CardDescription className="mb-4 text-lg">
 					{post.description}
 				</CardDescription>
 
-				{youtubeVideoId && ( // Render YouTube video if valid ID exists
+				{post?.lectureURL && ( // Render YouTube video if valid ID exists
 					<div className="mb-4">
 						<iframe
 							width="100%"
 							height="400"
-							src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+							src={`https://www.youtube.com/embed/${getVideoId(post)}`}
 							title="YouTube video player"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 							allowFullScreen
@@ -194,14 +172,14 @@ function Post() {
 				</CardDescription>
 			</CardContent>
 			<CardContent>
-				<Label className="mb-3 text-lg font-bold">Comments</Label>
+				<Label className="mb-3 text-xl font-bold">Comments</Label>
 				<div>
 					{post.comments &&
 						Object.entries(post.comments).map(
 							([commentId, comment]) => (
 								<div
 									key={commentId}
-									className="relative mb-4 flex flex-col space-y-4 hover:bg-muted"
+									className="relative mb-4 flex flex-col space-y-4 rounded-sm p-2 hover:bg-muted"
 									onMouseEnter={() =>
 										handleMouseEnter(commentId)
 									}
@@ -210,7 +188,7 @@ function Post() {
 									}
 								>
 									<div className="flex justify-between">
-										<span className="text-sm">
+										<span className="text-sm font-bold">
 											{user.username ===
 											comment.author ? (
 												<Link to="/profile">
@@ -231,7 +209,7 @@ function Post() {
 											).toLocaleString()}
 										</span>
 									</div>
-									<div className="flex items-center space-x-2">
+									<div className="relative flex items-center space-x-2">
 										<div className="w-full">
 											{comment.comment}
 										</div>
@@ -247,7 +225,9 @@ function Post() {
 														commentId
 													)
 												}
-												className="cursor-pointer text-sm bg-transparent hover:bg-transparent"
+												size="icon"
+												variant="ghost"
+												className="absolute bottom-0 right-0 cursor-pointer text-sm"
 											>
 												<Trash2 color="red" />
 											</Button>
@@ -266,16 +246,18 @@ function Post() {
 						onChange={handleCommentChange}
 						className="w-full"
 					/>
-					<Button onClick={submitComment}><SendHorizontal /></Button>
+					<Button onClick={submitComment}>
+						<SendHorizontal />
+					</Button>
 				</div>
 			</CardContent>
 			{hasPermissions && (
 				<div className="flex items-center justify-end gap-2 p-4">
 					<Button onClick={navigateToEdit} variant="secondary">
-            <Pencil />
+						<Pencil />
 					</Button>
 					<Button onClick={deletePost} variant="destructive">
-						<Trash2  variant="destructive"/>
+						<Trash2 variant="destructive" />
 					</Button>
 				</div>
 			)}
@@ -284,5 +266,3 @@ function Post() {
 }
 
 export default Post;
-
-

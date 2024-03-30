@@ -33,6 +33,7 @@ function AddPost() {
 	const { toast } = useToast();
 
 	const onSubmit = handleSubmit(async (data) => {
+	
 		const response = await handleCreatePost(data);
 
 		if (response.success) {
@@ -49,6 +50,12 @@ function AddPost() {
 			});
 		}
 	});
+
+	const isValidImageUrl = (url) => {
+		const img = new Image();
+		img.src = url;
+		return img.complete || img.height > 0;
+	};
 
 	return (
 		<>
@@ -90,16 +97,18 @@ function AddPost() {
 						<Input
 							{...register("image", {
 								required: "Image is required",
+								validate: {
+									validImage: value => isValidImageUrl(value) || "Invalid image URL",
+								},
 							})}
-							placeholder="Image..."
+							placeholder="Image URL..."
 							className={cn(
-								errors.image
-									? "focus-visible:ring-destructive"
-									: null
+								errors.image ? "focus-visible:ring-destructive" : null
 							)}
 						/>
 						<ErrorMessage error={errors.image} />
 					</div>
+
 					<div className="space-y-2">
 						<Label htmlFor="lectureURL">Lecture URL</Label>
 						<Input

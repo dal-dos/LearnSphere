@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 function Home() {
 	return (
-		<section className="h-full w-full flex flex-col gap-16 items-center justify-center">
+		<section className="flex h-full w-full flex-col items-center justify-center gap-16">
 			<img
 				src="./assets/learnspherelogo-text.png"
 				alt="LearnSphere Logo"

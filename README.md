@@ -9,8 +9,9 @@ To get started with LearnSphere, follow these instructions:
 ### Prerequisites
 
 Ensure you have the following installed on your system:
-- Node.js (v14 or newer)
-- npm (v6 or newer)
+
+-   Node.js (v14 or newer)
+-   npm (v6 or newer)
 
 ### Installation
 
@@ -25,12 +26,13 @@ To run LearnSphere on your local machine, execute: npm run dev
 This will start the development server.
 To open the program within your browser, enter 'o' + 'Enter' into the terminal.
 To close the program, enter 'q' + 'Enter' into the terminal.
+
 ## Features
 
-- Interactive lectures on various subjects
-- Quizzes to test your knowledge
-- Progress tracking for each courser
-- User profiles and customization options
+-   Interactive lectures on various subjects
+-   Quizzes to test your knowledge
+-   Progress tracking for each courser
+-   User profiles and customization options
 
 ## Contributing
 

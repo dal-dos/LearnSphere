@@ -18,9 +18,13 @@ function Navigation() {
 	const { isLoggedIn, signout } = useAuth();
 
 	return (
-		<nav className="flex w-full p-2 justify-between items-center">
+		<nav className="flex w-full items-center justify-between p-2">
 			<NavLink className="" to="/">
-				<img className="size-16" src="./assets/learnspherelogo.png" alt="logo" />
+				<img
+					className="size-16"
+					src="./assets/learnspherelogo.png"
+					alt="logo"
+				/>
 			</NavLink>
 
 			<ul className="flex gap-2">
@@ -41,22 +45,22 @@ function Navigation() {
 								>
 									<NavLink
 										to="/profile"
-										className="group flex gap-2 items-center justify-center"
+										className="group flex items-center justify-center gap-2"
 									>
 										<span>Profile</span>
-										<LucideChevronDown className="size-4 group-hover:rotate-180 transition-transform duration-300 ease-in-out flex items-center gap-1" />
+										<LucideChevronDown className="flex size-4 items-center gap-1 transition-transform duration-300 ease-in-out group-hover:rotate-180" />
 									</NavLink>
 								</Button>
 							</HoverCardTrigger>
-							<HoverCardContent className="flex w-full gap-2 p-2 flex-col items-center justify-center duration-300">
+							<HoverCardContent className="flex w-full flex-col items-center justify-center gap-2 p-2 duration-300">
 								<Button
 									asChild
 									variant="ghost"
 									size="sm"
-									className="w-full group"
+									className="group w-full"
 								>
-									<slot className="w-full flex justify-between items-center">
-										<LucideSettings className="size-4 mr-4 group-hover:rotate-45 duration-300" />
+									<slot className="flex w-full items-center justify-between">
+										<LucideSettings className="mr-4 size-4 duration-300 group-hover:rotate-45" />
 										<NavLink to="/settings">
 											Settings
 										</NavLink>
@@ -68,8 +72,8 @@ function Navigation() {
 									size="sm"
 									onClick={() => signout()}
 								>
-									<slot className="w-full flex justify-between items-center">
-										<LogOut className="size-4 mr-4" />
+									<slot className="flex w-full items-center justify-between">
+										<LogOut className="mr-4 size-4" />
 										<span>Sign Out</span>
 									</slot>
 								</Button>

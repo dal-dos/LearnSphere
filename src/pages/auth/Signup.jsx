@@ -84,7 +84,7 @@ const Signup = () => {
 	});
 
 	return (
-		<div className="w-1/2 mx-auto border rounded-lg p-2 min-w-80">
+		<div className="mx-auto w-1/2 min-w-80 rounded-lg border p-2">
 			<FormHeading>Register</FormHeading>
 			<form onSubmit={onSubmit} className="space-y-4 px-2">
 				<section>

@@ -49,7 +49,7 @@ const Login = () => {
 	});
 
 	return (
-		<div className="w-1/2 translate-x-1/2 border rounded-lg p-2 pb-4">
+		<div className="w-1/2 translate-x-1/2 rounded-lg border p-2 pb-4">
 			<FormHeading>Login</FormHeading>
 			<form onSubmit={onSubmit} className="space-y-4 px-2">
 				<section>
@@ -83,7 +83,7 @@ const Login = () => {
 					/>
 					<ErrorMessage error={errors.password} />
 				</section>
-				<div className="text-center py-2">
+				<div className="py-2 text-center">
 					<Button type="submit">
 						<span>Login</span>
 					</Button>

@@ -110,7 +110,7 @@ function Profile() {
                     )}
                     {user.role === "teacher" && (
                         <section className="mt-10">
-                            <h2 className="text-xl font-semibold mb-4">User's Posts</h2>
+                            <h2 className="text-xl font-semibold mb-4">Your Posts</h2>
                             {!userPosts ? (
                             <div className="flex justify-center items-center h-screen">
                                 <Loader2 className="animate-spin" />

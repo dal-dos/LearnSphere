@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { SquarePen } from "lucide-react";
 
 function AllPostsPage() {
@@ -27,16 +26,21 @@ function AllPostsPage() {
 		const results = posts
 			?.filter(
 				(post) =>
-					post?.postedBy?.toString().toLowerCase().includes(searchTerm) ||
-					post?.description?.toString().toLowerCase().includes(searchTerm)
+					post?.postedBy
+						?.toString()
+						.toLowerCase()
+						.includes(searchTerm) ||
+					post?.description
+						?.toString()
+						.toLowerCase()
+						.includes(searchTerm)
 			)
 			.sort((a, b) => b.createdAt._seconds - a.createdAt._seconds); // This line adds the sorting logic
-	
+
 		setSearchResults(results);
-	
+
 		setPermissions(user.role !== "student");
 	}, [searchTerm, posts]);
-	
 
 	useEffect(() => {}, [posts]);
 

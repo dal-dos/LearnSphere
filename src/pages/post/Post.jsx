@@ -133,7 +133,7 @@ const deletePost = async () => {
             <img src={post.image} alt="Thumbnail" className="mb-4" />
           )}
 
-          <CardDescription className="mb-4">{post.description}</CardDescription>
+          <CardDescription className="mb-4" style={{ fontSize: '1.2em' }}>{post.description}</CardDescription>
           
           {youtubeVideoId && ( // Render YouTube video if valid ID exists
             <div className="mb-4">

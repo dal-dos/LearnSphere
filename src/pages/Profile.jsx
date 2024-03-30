@@ -34,33 +34,30 @@ function Profile() {
                 biography: profile.biography || '',
                 role: user.role,
             });
-            function isValidImage(src) {
+    
+            async function isValidImage(src) {
                 return new Promise(resolve => {
                     const img = new Image();
                     img.onload = () => resolve(true);
                     img.onerror = () => resolve(false);
-                    img.src = editProfile.profileImg;
+                    img.src = src; 
                 });
             }
+    
             if (user.role === "teacher") {
                 const fetchUserPosts = async () => {
                     const posts = await handleGetPostByUserId(profile.userId);
                     setUserPosts(posts);
                 };
                 fetchUserPosts();
-
-                isValidImage().then(valid => {
+                
+                isValidImage(profile.profileImg).then(valid => {
                     setImageExists(valid);
                 });
             }
         }
-    }, [profile, handleGetPostByUserId]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setEditProfile(prev => ({ ...prev, [name]: value }));
-    };
-
+    }, [profile, handleGetPostByUserId, user.role]);
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         await handleUpdateProfile(editProfile.userId, editProfile.profileImg, editProfile.biography, editProfile.role);

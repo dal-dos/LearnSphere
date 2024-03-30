@@ -28,15 +28,19 @@ function AllPostsPage() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const results = posts?.filter(
-			(post) =>
-				post?.postedBy?.toString().toLowerCase().includes(searchTerm) ||
-				post?.description?.toString().toLowerCase().includes(searchTerm)
-		);
+		const results = posts
+			?.filter(
+				(post) =>
+					post?.postedBy?.toString().toLowerCase().includes(searchTerm) ||
+					post?.description?.toString().toLowerCase().includes(searchTerm)
+			)
+			.sort((a, b) => b.createdAt._seconds - a.createdAt._seconds); // This line adds the sorting logic
+	
 		setSearchResults(results);
-
+	
 		setPermissions(user.role !== "student");
 	}, [searchTerm, posts]);
+	
 
 	const addPost = () => {
 		navigate("/posts/add");

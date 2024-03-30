@@ -75,7 +75,7 @@ function AllPostsPage() {
 function PostPreview({ post }) {
 	return (
         <Card className="w-full p-4 hover:bg-muted cursor-pointer">
-            <Link to={`/posts/${post.postId}`} className="w-full" activeClassName="current">
+            <Link to={`/posts/${post.postId}`} className="w-full">
                 <CardHeader>
                     <CardTitle>{post.title}</CardTitle>
                 </CardHeader>

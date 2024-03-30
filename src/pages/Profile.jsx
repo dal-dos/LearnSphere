@@ -135,7 +135,7 @@ function Profile() {
 							</form>
 						</Card>
 					) : (
-						<Card className="rounded-lg p-6 text-center shadow">
+						<Card className="rounded-lg p-6 text-center shadow relative">
 							<Avatar className="mx-auto h-32 w-32 rounded-full object-cover">
 								{imageExists ? (
 									<AvatarImage
@@ -159,12 +159,15 @@ function Profile() {
 								{editProfile.biography}
 							</CardDescription>
 
-							<Button
-								onClick={() => setIsEditing(true)}
-								className="mt-4 rounded px-4 py-2 font-bold text-white hover:bg-blue-700"
-							>
-								Edit Profile
-							</Button>
+                            <div className="absolute bottom-0 right-0 mb-4 mr-4">
+                                <Button
+                                    onClick={() => setIsEditing(true)}
+                                    className="rounded px-4 py-2 font-bold text-inverted hover:bg-muted bg-transparant"
+                                    style={{ fontSize: "1.6rem" }}
+                                >
+                                    🖋️
+                                </Button>
+                            </div>
 						</Card>
 					)}
 					{user.role === "teacher" && (

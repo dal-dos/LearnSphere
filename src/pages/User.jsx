@@ -6,7 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { useProfile } from "@/hooks";
 
 function User() {
-	const { handleGetPostByUserId } = usePosts();
+	const { handleGetPostByUserId , posts} = usePosts();
 	const [userProfile, setProfile] = useState(null);
 	const [userPosts, setUserPosts] = useState([]);
 	const { user } = useAuth();
@@ -24,10 +24,14 @@ function User() {
 					fetchedProfile.role === "teacher" &&
 					fetchedProfile.userId
 				) {
-					const posts = await handleGetPostByUserId(
-						fetchedProfile.userId
-					);
-					setUserPosts(posts);
+
+                    const postsWithUserId = posts.filter(post => post.postedBy === fetchedProfile.userId);
+                    if (postsWithUserId) {
+                        setUserPosts(postsWithUserId);
+                    } else {
+                        const myPosts = await handleGetPostByUserId(fetchedProfile.userId);
+                        setUserPosts(myPosts);
+                    }
 				}
 
 				const isValid = await isValidImage(fetchedProfile.profileImg);

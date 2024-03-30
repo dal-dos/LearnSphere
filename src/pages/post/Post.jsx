@@ -29,7 +29,7 @@ function Post() {
 		handleDeletePost,
 		handleAddComment,
 		handleDeleteComment,
-		getPost,
+		posts,
 	} = usePosts();
 	const { user } = useAuth();
 	const [post, setPost] = useState(null);
@@ -49,10 +49,18 @@ function Post() {
 	};
 
 	useEffect(() => {
+    
 		async function fetchPost() {
-			const fetchedPost = await getPostById(postSlug);
-			setPost(fetchedPost);
-
+      let fetchedPost;
+      const foundPost = posts.find(post => post.postId === postSlug);
+      if (foundPost) {
+          fetchedPost = foundPost;
+          setPost(foundPost);
+      } else {
+          fetchedPost = await getPostById(postSlug);
+          setPost(fetchedPost);
+      }
+			
 			if (fetchedPost) {
 				const currentUserIsAdmin = user.role === "admin";
 				setCurrentUserIsPostOwner(

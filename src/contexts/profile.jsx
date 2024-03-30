@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 import { PROFILE_BASE_URL } from "../constants";
 import { useAuth, usePosts } from "@/hooks";
 

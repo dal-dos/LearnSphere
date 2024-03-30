@@ -45,11 +45,15 @@ function Profile() {
             }
     
             if (user.role === "teacher") {
-                const fetchUserPosts = async () => {
-                    const posts = await handleGetPostByUserId(profile.userId);
-                    setUserPosts(posts);
-                };
-                fetchUserPosts();
+                if(!profile.posts){
+                    const fetchUserPosts = async () => {
+                        const posts = await handleGetPostByUserId(profile.userId);
+                        setUserPosts(profile.posts);
+                    };
+                    fetchUserPosts();
+                }else{
+                    setUserPosts(profile.posts);
+                }
             }
 
             isValidImage(profile.profileImg).then(valid => {
@@ -57,7 +61,7 @@ function Profile() {
             });
         }
     }, [profile, handleGetPostByUserId, user.role]);
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         await handleUpdateProfile(editProfile.userId, editProfile.profileImg, editProfile.biography, editProfile.role);

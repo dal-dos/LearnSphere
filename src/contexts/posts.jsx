@@ -234,6 +234,9 @@ const handleUpdatePost = async (postId, { title, description, image, lectureURL 
         },
       });
       const data = await response.json();
+      if(userId === profile.userId){
+        profile.posts = data.post;
+      }
       return data.post;
     } catch (error) {
       console.error("Error fetching posts by user ID:", error);

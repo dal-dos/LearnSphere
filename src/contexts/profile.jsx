@@ -1,11 +1,12 @@
 import React, { createContext, useState, useEffect } from "react";
 import { PROFILE_BASE_URL } from "../constants";
-import { useAuth } from "@/hooks";
+import { useAuth, usePosts } from "@/hooks";
 
 export const ProfileContext = createContext();
 
 const ProfileProvider = ({ children }) => {
     const { isLoggedIn, getToken } = useAuth();
+    const { handleGetPostByUserId } = usePosts();
     const [profile, setProfile] = useState(null);
 
     useEffect(() => {
@@ -13,7 +14,10 @@ const ProfileProvider = ({ children }) => {
 			return;
 		}
 		async function fetchProfile() {
-			setProfile(await getProfile(`token=${getToken()}`));
+            const tempProfile =await getProfile(`token=${getToken()}`)
+            const posts =await handleGetPostByUserId(tempProfile.userId);
+			setProfile(tempProfile);
+            
 		}
 		fetchProfile();
 	}, [isLoggedIn, getToken]);

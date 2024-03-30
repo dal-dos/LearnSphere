@@ -111,26 +111,22 @@ export default function AuthProvider({ children }) {
 				setUser({ ...data.user });
 				setIsLoggedIn(true);
 				setTokenInStorage(data.token);
-	
+
 				return {
 					success: true,
 					message: "Signup successful",
 				};
-			} else {
-				return {
-					success: false,
-					message: data.message,
-				};
 			}
+
+			throw new Error(data.message);
 		} catch (error) {
-			console.error('Error during signup:', error);
+			console.error("Error during signup:", error);
 			return {
 				success: false,
-				message: "An error occurred during signup.",
+				message: data.message || "An error occurred during signup.",
 			};
 		}
 	}, []);
-	
 
 	const signout = useCallback(() => {
 		setUser(null);

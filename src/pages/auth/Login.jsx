@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks";
 import ErrorMessage from "@/components/ErrorMessage";
 import FormHeading from "@/components/FormHeading";
 import { useToast } from "@/components/ui/use-toast";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
 	const { isLoggedIn, login } = useAuth();
@@ -83,10 +83,18 @@ const Login = () => {
 					/>
 					<ErrorMessage error={errors.password} />
 				</section>
-				<Button type="submit">
-					<span>Login</span>
-				</Button>
+				<div className="text-center py-2">
+					<Button type="submit">
+						<span>Login</span>
+					</Button>
+				</div>
 			</form>
+			<div className="text-center">
+				Don't have an account?
+				<Button type="button" variant="link" asChild>
+					<Link to="/signup">Signup</Link>
+				</Button>
+			</div>
 		</div>
 	);
 };

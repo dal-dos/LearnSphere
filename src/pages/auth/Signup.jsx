@@ -11,6 +11,7 @@ import FormHeading from "@/components/FormHeading";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useProfile } from "@/hooks";
 import {
 	Select,
 	SelectTrigger,
@@ -21,6 +22,8 @@ import {
 
 const Signup = () => {
 	const { signup, isLoggedIn } = useAuth();
+	const { createProfile } = useProfile();
+
 	const {
 		register,
 		handleSubmit,
@@ -44,41 +47,44 @@ const Signup = () => {
 
 	const onSubmit = handleSubmit(async function (formValues) {
 		try {
-			const response = await signup(formValues);
-			console.log('Response:', response); // Log the response for debugging
-			
-			if (response && typeof response === 'object') {
-				if (response.success) {
+			const authResponse = await signup({
+				username: formValues.username,
+				password: formValues.password,
+				role: formValues.role,
+			});
+
+			if (authResponse.success) {
+				const profileResponse = await createProfile({
+					name: formValues.name,
+					username: formValues.username,
+					role: formValues.role,
+				});
+
+				if (profileResponse.success) {
 					toast({
 						title: "Signup successful",
 					});
 					redirect("../dashboard");
 					return;
-				} else {
-					toast({
-						variant: "destructive",
-						title: "Signup Failed!",
-						description: response.message,
-					});
 				}
 			}
-			
-			// Handle invalid response format
-			throw new Error("Invalid response format");
+
+			throw new Error(
+				authResponse.message + " " + profileResponse.message
+			);
 		} catch (error) {
-			console.error('Error during signup:', error); // Log any errors
+			console.error("Error during signup:", error); // Log any errors
 			toast({
 				variant: "destructive",
 				title: "Signup Failed!",
-				description: "An error occurred during signup.",
+				description:
+					error.message || "An error occurred during signup.",
 			});
 		}
 	});
 
-	
-
 	return (
-		<div className="w-1/2 translate-x-1/2 border rounded-lg p-2 pb-4">
+		<div className="w-1/2 mx-auto border rounded-lg p-2 min-w-80">
 			<FormHeading>Register</FormHeading>
 			<form onSubmit={onSubmit} className="space-y-4 px-2">
 				<section>
@@ -154,12 +160,14 @@ const Signup = () => {
 								? "focus-visible:ring-destructive"
 								: null
 						)}
+						type="password"
 					/>
 					<ErrorMessage error={errors.password} />
 				</section>
 				<section>
 					<Label aria-required>Confirm Password</Label>
 					<Input
+						type="password"
 						{...register("confirmPassword", {
 							required: "Confirm Password is required",
 							validate: (value, formValues) => {
@@ -177,11 +185,13 @@ const Signup = () => {
 					/>
 					<ErrorMessage error={errors.confirmPassword} />
 				</section>
-				<Button type="submit">
-					<span>Signup</span>
-				</Button>
+				<div className="text-center">
+					<Button type="submit">
+						<span>Signup</span>
+					</Button>
+				</div>
 			</form>
-			<div className="text">
+			<div className="text-center">
 				Already have an account?
 				<Button type="button" variant="link" asChild>
 					<Link to="/login">Log in</Link>

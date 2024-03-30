@@ -118,7 +118,7 @@ function Profile() {
                             ) : (
                             userPosts.length > 0 ? (
                                 userPosts.map((post) => (
-                                <Card key={post.id} className="shadow rounded-lg p-4 mb-6">
+                                <Card key={post.postId} className="shadow rounded-lg p-4 mb-6">
                                     <CardTitle className="text-lg font-semibold">{post.title}</CardTitle>
                                     <CardDescription className="text-gray-600">{post.description}</CardDescription>
                                 </Card>

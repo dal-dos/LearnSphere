@@ -92,9 +92,6 @@ function Post() {
 		}
 	};
 
-	const navigateToEdit = () => {
-		navigate("/posts/${postSlug}/edit");
-	};
 
 	const handleCommentChange = (e) => {
 		setComment(e.target.value);
@@ -253,9 +250,11 @@ function Post() {
 			</CardContent>
 			{hasPermissions && (
 				<div className="flex items-center justify-end gap-2 p-4">
-					<Button onClick={navigateToEdit} variant="secondary">
+					<Link to={`/posts/${post.postId}/edit`}>
+					<Button  variant="secondary">
 						<Pencil />
 					</Button>
+					</Link>
 					<Button onClick={deletePost} variant="destructive">
 						<Trash2 variant="destructive" />
 					</Button>

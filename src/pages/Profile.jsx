@@ -52,13 +52,13 @@ function Profile() {
 				});
 			}
 
-			if (user.role === "teacher") {
+			if (profile.role === "teacher") {
 				if (!profile.posts) {
 					const fetchUserPosts = async () => {
 						const posts = await handleGetPostByUserId(
 							profile.userId
 						);
-						setUserPosts(profile.posts);
+						setUserPosts(posts);
 					};
 					fetchUserPosts();
 				} else {

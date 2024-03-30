@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Loader2 } from "lucide-react";
-
+import { Link } from "react-router-dom";
 
 function Profile() {
     const { profile, handleUpdateProfile } = useContext(ProfileContext);
@@ -118,10 +118,12 @@ function Profile() {
                             ) : (
                             userPosts.length > 0 ? (
                                 userPosts.map((post) => (
-                                <Card key={post.postId} className="shadow rounded-lg p-4 mb-6">
-                                    <CardTitle className="text-lg font-semibold">{post.title}</CardTitle>
-                                    <CardDescription className="text-gray-600">{post.description}</CardDescription>
-                                </Card>
+                                <Link to={`/posts/${post.postId}`} className="w-full">
+                                    <Card key={post.postId} className="shadow rounded-lg p-4 mb-6 hover:bg-muted" >
+                                        <CardTitle className="text-lg font-semibold">{post.title}</CardTitle>
+                                        <CardDescription className="text-gray-600">{post.description}</CardDescription>
+                                    </Card>
+                                </Link>
                                 ))
                             ) : (
                                 <p className="text-gray-600">No posts found.</p>

@@ -19,21 +19,22 @@ function User() {
             try {
                 const fetchedProfile = await handleGetProfileById(userId);
                 setProfile(fetchedProfile);
-
-                if(userId.role == "teacher"){
-                    const posts = await handleGetPostByUserId(userId); 
+    
+                if (fetchedProfile.role === "teacher" && fetchedProfile.userId) {
+                    const posts = await handleGetPostByUserId(fetchedProfile.userId); 
                     setUserPosts(posts);    
                 }
-
+    
                 const isValid = await isValidImage(fetchedProfile.profileImg);
                 setImageExists(isValid);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
-
+    
         fetchData();
     }, [userId]); 
+    
 
     async function isValidImage(src) {
         return new Promise(resolve => {
@@ -67,7 +68,7 @@ function User() {
                         </div>
                     </Card>
                     
-                    {userId.role === "teacher" && (
+                    {userProfile.role === "teacher" && (
                         <section className="mt-10">
                             <h2 className="text-xl font-semibold mb-4">{userProfile.userId}'s Posts</h2>
                             {!userPosts ? (

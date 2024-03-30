@@ -34,7 +34,7 @@ function EditPost() {
 	});
 
 	useEffect(() => {
-		const postToEdit = posts.find((post) => post.id === postSlug);
+		const postToEdit = posts.find((post) => post.postId === postSlug);
 		if (postToEdit) {
 			setPost({
 				title: postToEdit.title,

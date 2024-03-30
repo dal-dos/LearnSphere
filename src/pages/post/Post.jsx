@@ -59,7 +59,7 @@ function Post() {
 					fetchedPost.postedBy === user.username
 				);
 
-				setPermissions(currentUserIsAdmin || currentUserIsPostOwner);
+				setPermissions(currentUserIsAdmin || fetchedPost.postedBy === user.username);
 			}
 
 			function isValidImage(src) {

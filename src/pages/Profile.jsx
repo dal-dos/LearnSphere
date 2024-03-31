@@ -10,6 +10,15 @@ import {
 	CardHeader,
 	CardFooter,
 } from "@/components/ui/card";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+	DialogFooter,
+  } from "@/components/ui/dialog"  
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
@@ -90,6 +99,12 @@ function Profile() {
 		setEditProfile((prev) => ({ ...prev, [name]: value }));
 	};
 
+	const isValidImageUrl = (url) => {
+		const img = new Image();
+		img.src = url;
+		return img.complete || img.height > 0;
+	};
+
 	return (
 		<div className="mx-auto max-w-4xl p-5">
 			{!profile ? (
@@ -163,13 +178,66 @@ function Profile() {
 							</CardDescription>
 
                             <div className="absolute bottom-0 right-0 mb-4 mr-4">
-                                <Button
+                                {/* <Button
                                     onClick={() => setIsEditing(true)}
                                     className="rounded px-4 py-2 font-bold text-inverted hover:bg-muted bg-transparant"
                                     style={{ fontSize: "1.6rem" }}
                                 >
                                     <Pencil/>
-                                </Button>
+                                </Button> */}
+								<Dialog>
+								<DialogTrigger asChild>
+									<Button variant="outline"><Pencil/></Button>
+								</DialogTrigger>
+								<DialogContent>
+									<DialogHeader>
+									<DialogTitle>Edit profile</DialogTitle>
+									<DialogDescription>
+										Make changes to your profile here. Click save when you're done.
+									</DialogDescription>
+									</DialogHeader>
+									<div className="grid gap-4 py-4">
+									<div className="grid grid-cols-4 items-center gap-4">
+										<Label
+											className="text-right"
+											htmlFor="biography"
+										>
+											Biography
+										</Label>
+										<Textarea
+											id="biography"
+											name="biography"
+											rows="3"
+											className="col-span-3"
+											placeholder="Write your biography..."
+											value={editProfile.biography}
+											onChange={handleChange}
+										></Textarea>
+									</div>
+										{/* <div className="grid grid-cols-4 items-center gap-4">
+											<Label className="text-right" htmlFor="profileImg">
+											Image URL
+											</Label>
+											<Input
+												{...register("image", {
+													required: "Image is required",
+													validate: {
+														validImage: value => isValidImageUrl(value) || "Invalid profile image URL",
+													},
+												})}
+												placeholder="Profile Image URL..."
+												className={cn(
+													errors.profileImg ? "focus-visible:ring-destructive" : null
+												)}
+											/>
+											<ErrorMessage error={errors.profileImg} />
+										</div>*/}
+									</div> 
+									<DialogFooter>
+									<Button >Save changes</Button>
+									</DialogFooter>
+								</DialogContent>
+								</Dialog>
                             </div>
 						</Card>
 					)}

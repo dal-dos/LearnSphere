@@ -96,7 +96,7 @@ function AddPost() {
 						<Label htmlFor="image">Image</Label>
 						<Input
 							value="https://ecrcommunity.plos.org/wp-content/uploads/sites/9/legacy-featured-images/teach-1820041_1920-16x9.jpg"
-							
+							defaultValue="https://ecrcommunity.plos.org/wp-content/uploads/sites/9/legacy-featured-images/teach-1820041_1920-16x9.jpg"
 							{...register("image", {
 								required: "Image is required",
 								validate: {

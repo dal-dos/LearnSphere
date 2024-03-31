@@ -154,7 +154,7 @@ const Signup = () => {
 						{...register("password", {
 							required: "Password is required",
 						})}
-						autoComplete="password"
+						autoComplete="new-password"
 						className={cn(
 							errors.password
 								? "focus-visible:ring-destructive"
@@ -168,6 +168,7 @@ const Signup = () => {
 					<Label aria-required>Confirm Password</Label>
 					<Input
 						type="password"
+						autoComplete="new-password"
 						{...register("confirmPassword", {
 							required: "Confirm Password is required",
 							validate: (value, formValues) => {

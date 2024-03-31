@@ -1,6 +1,7 @@
 import { useState, createContext, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks";
 import { POSTS_BASE_URL } from "../constants";
+import { useProfile } from "@/hooks";
 import { useToast } from "@/components/ui/use-toast";
 export const PostsContext = createContext({
 	posts: [],
@@ -18,6 +19,7 @@ export default function PostsProvider({ children }) {
 	const { isLoggedIn, getToken, user } = useAuth();
 	const [posts, setPosts] = useState([]);
 	const [userPosts, setUserPosts] = useState([]);
+	const { profile } = useProfile();
 
 	const { toast } = useToast();
 

@@ -51,6 +51,7 @@ function EditPost() {
 			if (result.success) {
 				toast({ title: "Updated Post" });
 				navigate(`/posts`);
+				window.location.reload();
 			} else {
 				console.error("Failed to update post:", result.message);
 				toast({

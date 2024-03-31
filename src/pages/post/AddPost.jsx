@@ -33,7 +33,6 @@ function AddPost() {
 	const { toast } = useToast();
 
 	const onSubmit = handleSubmit(async (data) => {
-	
 		const response = await handleCreatePost(data);
 
 		if (response.success) {
@@ -98,12 +97,16 @@ function AddPost() {
 							{...register("image", {
 								required: "Image is required",
 								validate: {
-									validImage: value => isValidImageUrl(value) || "Invalid image URL",
+									validImage: (value) =>
+										isValidImageUrl(value) ||
+										"Invalid image URL",
 								},
 							})}
 							placeholder="Image URL..."
 							className={cn(
-								errors.image ? "focus-visible:ring-destructive" : null
+								errors.image
+									? "focus-visible:ring-destructive"
+									: null
 							)}
 						/>
 						<ErrorMessage error={errors.image} />

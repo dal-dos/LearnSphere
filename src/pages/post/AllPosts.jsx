@@ -14,8 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { SquarePen } from "lucide-react";
-import { ToastAction } from "@/components/ui/toast"
-import { useToast } from "@/components/ui/use-toast"
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 function AllPostsPage() {
 	const { posts } = usePosts();
@@ -24,7 +24,7 @@ function AllPostsPage() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchResults, setSearchResults] = useState([]);
 	const [hasPermissions, setPermissions] = useState(false);
-	const { toast } = useToast()
+	const { toast } = useToast();
 
 	useEffect(() => {
 		const results = posts
@@ -45,8 +45,10 @@ function AllPostsPage() {
 		setPermissions(user.role === "teacher");
 
 		if (profile) {
-			if(profile.role === "teacher"){
-				const postsWithUserId = posts.filter(post => post.postedBy === profile.userId);
+			if (profile.role === "teacher") {
+				const postsWithUserId = posts.filter(
+					(post) => post.postedBy === profile.userId
+				);
 				profile.posts = postsWithUserId;
 			}
 		}
@@ -55,8 +57,8 @@ function AllPostsPage() {
 	useEffect(() => {}, [posts]);
 
 	const handleButtonClick = () => {
-        addToast("Only teachers can create posts", { appearance: 'error' });
-    };
+		addToast("Only teachers can create posts", { appearance: "error" });
+	};
 
 	return (
 		<>
@@ -80,14 +82,16 @@ function AllPostsPage() {
 									</Link>
 								</Button>
 							) : (
-								<Button onClick={() => {
-									toast({
-										variant: "destructive",
-									  title: "Only Teachers can create posts!",
-									})
-								  }}>
+								<Button
+									onClick={() => {
+										toast({
+											variant: "destructive",
+											title: "Only Teachers can create posts!",
+										});
+									}}
+								>
 									<SquarePen />
-								  </Button>
+								</Button>
 							)}
 						</div>
 						<div className="mt-2 flex flex-col items-center justify-center gap-2">

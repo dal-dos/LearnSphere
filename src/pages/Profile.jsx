@@ -11,7 +11,7 @@ import {
 	DialogTrigger,
 	DialogFooter,
 	DialogClose,
-  } from "@/components/ui/dialog"  
+} from "@/components/ui/dialog";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -42,9 +42,8 @@ function Profile() {
 	};
 
 	useEffect(() => {
-		
 		if (profile) {
-			if(isValidImageUrl(profile.profileImg)){
+			if (isValidImageUrl(profile.profileImg)) {
 				setImageExists(true);
 			}
 			setEditProfile({
@@ -58,15 +57,14 @@ function Profile() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-	
-		
+
 		console.log(editProfile.userId);
 		console.log(editProfile.profileImg);
 		console.log(editProfile.biography);
 		console.log(editProfile.role);
 
 		if (!isValidImageUrl(editProfile.profileImg)) {
-			console.error('Invalid image URL');
+			console.error("Invalid image URL");
 			return;
 		}
 		const response = await handleUpdateProfile(
@@ -76,28 +74,24 @@ function Profile() {
 			profile.role
 		);
 
-		if(response){
+		if (response) {
 			setImageExists(true);
 			const tempImg = editProfile.profileImg;
 			const tempBio = editProfile.biography;
 			setOpen(false);
-			editProfile.profileImg= tempImg;
-			editProfile.biography= tempBio;
+			editProfile.profileImg = tempImg;
+			editProfile.biography = tempBio;
 			console.log(editProfile);
 			window.location.reload();
 		}
-		
-		
+
 		setIsEditing(false);
 	};
-	
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setEditProfile((prev) => ({ ...prev, [name]: value }));
 	};
-
-
 
 	return (
 		<div className="mx-auto max-w-4xl p-5">
@@ -172,7 +166,7 @@ function Profile() {
 							</CardDescription>
 
 							<div className="absolute bottom-0 right-0 mb-4 mr-4">
-                                {/* <Button
+								{/* <Button
                                     onClick={() => setIsEditing(true)}
                                     className="text-inverted bg-transparant rounded px-4 py-2 font-bold hover:bg-muted"
                                     style={{ fontSize: "1.6rem" }}
@@ -180,51 +174,67 @@ function Profile() {
                                     <Pencil/>
                                 </Button> */}
 								<Dialog open={open} onOpenChange={setOpen}>
-								<DialogTrigger asChild>
-									<Button variant="outline"><Pencil/></Button>
-								</DialogTrigger>
-								<DialogContent>
-									<DialogHeader>
-									<DialogTitle>Edit profile</DialogTitle>
-									<DialogDescription>
-										Make changes to your profile here. Click save when you're done.
-									</DialogDescription>
-									</DialogHeader>
-									<div className="grid gap-4 py-4">
-									<div className="grid grid-cols-4 items-center gap-4">
-										<Label
-											className="text-right"
-											htmlFor="biography"
-										>
-											Biography
-										</Label>
-										<Textarea
-											id="biography"
-											name="biography"
-											rows="3"
-											className="col-span-3"
-											placeholder="Write your biography..."
-											value={editProfile.biography}
-											onChange={handleChange}
-										></Textarea>
-									</div>
-										<div className="grid grid-cols-4 items-center gap-4">
-											<Label className="text-right" htmlFor="profileImg">
-											Image URL
-											</Label>
-											<Input
-												id="profileImg"
-												name="profileImg"
-												placeholder="Profile Image URL..."
-												className="col-span-3"
-												onChange={handleChange}
-											/>
+									<DialogTrigger asChild>
+										<Button variant="outline">
+											<Pencil />
+										</Button>
+									</DialogTrigger>
+									<DialogContent>
+										<DialogHeader>
+											<DialogTitle>
+												Edit profile
+											</DialogTitle>
+											<DialogDescription>
+												Make changes to your profile
+												here. Click save when you're
+												done.
+											</DialogDescription>
+										</DialogHeader>
+										<div className="grid gap-4 py-4">
+											<div className="grid grid-cols-4 items-center gap-4">
+												<Label
+													className="text-right"
+													htmlFor="biography"
+												>
+													Biography
+												</Label>
+												<Textarea
+													id="biography"
+													name="biography"
+													rows="3"
+													className="col-span-3"
+													placeholder="Write your biography..."
+													value={
+														editProfile.biography
+													}
+													onChange={handleChange}
+												></Textarea>
+											</div>
+											<div className="grid grid-cols-4 items-center gap-4">
+												<Label
+													className="text-right"
+													htmlFor="profileImg"
+												>
+													Image URL
+												</Label>
+												<Input
+													id="profileImg"
+													name="profileImg"
+													placeholder="Profile Image URL..."
+													className="col-span-3"
+													onChange={handleChange}
+												/>
+											</div>
 										</div>
-									</div> 
-									<DialogFooter>
-									<Button type="submit" onClick={handleSubmit} >Save changes</Button>
-									</DialogFooter>
-								</DialogContent>
+										<DialogFooter>
+											<Button
+												type="submit"
+												onClick={handleSubmit}
+											>
+												Save changes
+											</Button>
+										</DialogFooter>
+									</DialogContent>
 								</Dialog>
 							</div>
 						</Card>

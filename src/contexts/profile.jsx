@@ -68,7 +68,6 @@ const ProfileProvider = ({ children }) => {
 			if (data.success) {
 				setProfile(data.profile);
 				return data.profile;
-
 			} else {
 				throw new Error(data.message || "Profile update failed");
 			}

@@ -2,12 +2,22 @@ import React, { useContext, useState, useEffect } from "react";
 import { ProfileContext } from "@/contexts/profile";
 import { usePosts, useAuth } from "@/hooks";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+	DialogFooter,
+  } from "@/components/ui/dialog"  
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 
 function Profile() {
 	const { profile, handleUpdateProfile } = useContext(ProfileContext);
@@ -49,6 +59,13 @@ function Profile() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+	
+		if (!isValidImageUrl(editProfile.profileImg)) {
+			console.error('Invalid image URL');
+			return;
+		}
+	
+		// Proceed with updating the profile if the URL is valid
 		await handleUpdateProfile(
 			editProfile.userId,
 			editProfile.profileImg,
@@ -57,6 +74,7 @@ function Profile() {
 		);
 		setIsEditing(false);
 	};
+	
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -77,7 +95,7 @@ function Profile() {
 				</div>
 			) : (
 				<>
-					{isEditing ? (
+					{false ? (
 						<Card className="rounded-lg p-6 text-center shadow">
 							<form onSubmit={handleSubmit}>
 								<div className="mb-4">
@@ -142,13 +160,59 @@ function Profile() {
 							</CardDescription>
 
 							<div className="absolute bottom-0 right-0 mb-4 mr-4">
-								<Button
-									onClick={() => setIsEditing(true)}
-									className="text-inverted bg-transparant rounded px-4 py-2 font-bold hover:bg-muted"
-									style={{ fontSize: "1.6rem" }}
-								>
-									<Pencil />
-								</Button>
+                                {/* <Button
+                                    onClick={() => setIsEditing(true)}
+                                    className="text-inverted bg-transparant rounded px-4 py-2 font-bold hover:bg-muted"
+                                    style={{ fontSize: "1.6rem" }}
+                                >
+                                    <Pencil/>
+                                </Button> */}
+								<Dialog>
+								<DialogTrigger asChild>
+									<Button variant="outline"><Pencil/></Button>
+								</DialogTrigger>
+								<DialogContent>
+									<DialogHeader>
+									<DialogTitle>Edit profile</DialogTitle>
+									<DialogDescription>
+										Make changes to your profile here. Click save when you're done.
+									</DialogDescription>
+									</DialogHeader>
+									<div className="grid gap-4 py-4">
+									<div className="grid grid-cols-4 items-center gap-4">
+										<Label
+											className="text-right"
+											htmlFor="biography"
+										>
+											Biography
+										</Label>
+										<Textarea
+											id="biography"
+											name="biography"
+											rows="3"
+											className="col-span-3"
+											placeholder="Write your biography..."
+											value={editProfile.biography}
+											onChange={handleChange}
+										></Textarea>
+									</div>
+										<div className="grid grid-cols-4 items-center gap-4">
+											<Label className="text-right" htmlFor="profileImg">
+											Image URL
+											</Label>
+											<Input
+												id="profileImg"
+												name="profileImg"
+												placeholder="Profile Image URL..."
+												className="col-span-3"
+											/>
+										</div>
+									</div> 
+									<DialogFooter>
+									<Button >Save changes</Button>
+									</DialogFooter>
+								</DialogContent>
+								</Dialog>
 							</div>
 						</Card>
 					)}

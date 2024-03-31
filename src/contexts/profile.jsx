@@ -62,10 +62,12 @@ const ProfileProvider = ({ children }) => {
 					role,
 				}),
 			});
+			console.log(userId);
 			if (!response.ok) throw new Error("Failed to update profile");
 			const data = await response.json();
 			if (data.success) {
 				setProfile(data.profile);
+				return data
 			} else {
 				throw new Error(data.message || "Profile update failed");
 			}

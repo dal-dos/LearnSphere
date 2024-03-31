@@ -10,6 +10,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	DialogFooter,
+	DialogClose,
   } from "@/components/ui/dialog"  
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,27 +33,25 @@ function Profile() {
 
 	const { user } = useAuth();
 	const [imageExists, setImageExists] = useState(false);
+	const [open, setOpen] = useState(false);
+
+	const isValidImageUrl = (url) => {
+		const img = new Image();
+		img.src = url;
+		return img.complete || img.height > 0;
+	};
 
 	useEffect(() => {
+		
 		if (profile) {
+			if(isValidImageUrl(profile.profileImg)){
+				setImageExists(true);
+			}
 			setEditProfile({
 				userId: profile.userId || "",
 				profileImg: profile.profileImg,
 				biography: profile.biography || "",
 				role: user.role,
-			});
-
-			async function isValidImage(src) {
-				return new Promise((resolve) => {
-					const img = new Image();
-					img.onload = () => resolve(true);
-					img.onerror = () => resolve(false);
-					img.src = src;
-				});
-			}
-
-			isValidImage(profile.profileImg).then((valid) => {
-				setImageExists(valid);
 			});
 		}
 	}, [profile, handleGetPostByUserId, user.role]);
@@ -60,18 +59,35 @@ function Profile() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 	
+		
+		console.log(editProfile.userId);
+		console.log(editProfile.profileImg);
+		console.log(editProfile.biography);
+		console.log(editProfile.role);
+
 		if (!isValidImageUrl(editProfile.profileImg)) {
 			console.error('Invalid image URL');
 			return;
 		}
-	
-		// Proceed with updating the profile if the URL is valid
-		await handleUpdateProfile(
-			editProfile.userId,
+		const response = await handleUpdateProfile(
+			profile.userId,
 			editProfile.profileImg,
 			editProfile.biography,
-			editProfile.role
+			profile.role
 		);
+
+		if(response){
+			setImageExists(true);
+			const tempImg = editProfile.profileImg;
+			const tempBio = editProfile.biography;
+			setOpen(false);
+			editProfile.profileImg= tempImg;
+			editProfile.biography= tempBio;
+			console.log(editProfile);
+			window.location.reload();
+		}
+		
+		
 		setIsEditing(false);
 	};
 	
@@ -81,11 +97,7 @@ function Profile() {
 		setEditProfile((prev) => ({ ...prev, [name]: value }));
 	};
 
-	const isValidImageUrl = (url) => {
-		const img = new Image();
-		img.src = url;
-		return img.complete || img.height > 0;
-	};
+
 
 	return (
 		<div className="mx-auto max-w-4xl p-5">
@@ -167,7 +179,7 @@ function Profile() {
                                 >
                                     <Pencil/>
                                 </Button> */}
-								<Dialog>
+								<Dialog open={open} onOpenChange={setOpen}>
 								<DialogTrigger asChild>
 									<Button variant="outline"><Pencil/></Button>
 								</DialogTrigger>
@@ -205,11 +217,12 @@ function Profile() {
 												name="profileImg"
 												placeholder="Profile Image URL..."
 												className="col-span-3"
+												onChange={handleChange}
 											/>
 										</div>
 									</div> 
 									<DialogFooter>
-									<Button >Save changes</Button>
+									<Button type="submit" onClick={handleSubmit} >Save changes</Button>
 									</DialogFooter>
 								</DialogContent>
 								</Dialog>

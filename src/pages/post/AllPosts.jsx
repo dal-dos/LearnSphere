@@ -40,7 +40,7 @@ function AllPostsPage() {
 
 		setSearchResults(results);
 
-		setPermissions(user.role !== "student");
+		setPermissions(user.role === "teacher");
 
 		if (profile) {
 			if(profile.role === "teacher"){

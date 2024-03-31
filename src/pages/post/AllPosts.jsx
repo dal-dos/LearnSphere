@@ -14,6 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { SquarePen } from "lucide-react";
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
 
 function AllPostsPage() {
 	const { posts } = usePosts();
@@ -22,6 +24,7 @@ function AllPostsPage() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchResults, setSearchResults] = useState([]);
 	const [hasPermissions, setPermissions] = useState(false);
+	const { toast } = useToast()
 
 	useEffect(() => {
 		const results = posts
@@ -39,7 +42,6 @@ function AllPostsPage() {
 			.sort((a, b) => b.createdAt._seconds - a.createdAt._seconds); // This line adds the sorting logic
 
 		setSearchResults(results);
-
 		setPermissions(user.role === "teacher");
 
 		if (profile) {
@@ -51,6 +53,10 @@ function AllPostsPage() {
 	}, [searchTerm, posts]);
 
 	useEffect(() => {}, [posts]);
+
+	const handleButtonClick = () => {
+        addToast("Only teachers can create posts", { appearance: 'error' });
+    };
 
 	return (
 		<>
@@ -67,11 +73,22 @@ function AllPostsPage() {
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
 							/>
-							<Button disabled={!hasPermissions} asChild>
-								<Link to="/posts/add">
+							{hasPermissions ? (
+								<Button asChild>
+									<Link to="/posts/add">
+										<SquarePen />
+									</Link>
+								</Button>
+							) : (
+								<Button onClick={() => {
+									toast({
+										variant: "destructive",
+									  title: "Only Teachers can create posts!",
+									})
+								  }}>
 									<SquarePen />
-								</Link>
-							</Button>
+								  </Button>
+							)}
 						</div>
 						<div className="mt-2 flex flex-col items-center justify-center gap-2">
 							{searchResults.length === 0 && (

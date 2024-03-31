@@ -21,7 +21,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,7 @@ function Post() {
 	const { user } = useAuth();
 	const [post, setPost] = useState(null);
 	const [comment, setComment] = useState("");
+	const [editPermission, setEditPermission] = useState(false);
 
 	useEffect(() => {
 		async function fetchPost() {
@@ -54,9 +55,16 @@ function Post() {
 				fetchedPost = await getPostById(postSlug);
 			}
 
-			setPost(fetchedPost);
 			if (!fetchedPost) {
 				return;
+			}
+			setPost(fetchedPost);
+			if (
+				(user.role === "teacher" &&
+					user.username === fetchedPost.postedBy) ||
+				user.role === "admin"
+			) {
+				setEditPermission(true);
 			}
 		}
 		fetchPost();
@@ -88,7 +96,6 @@ function Post() {
 			});
 		}
 	};
-
 
 	const submitComment = async () => {
 		if (comment.trim()) {
@@ -233,33 +240,44 @@ function Post() {
 					</Button>
 				</div>
 			</CardContent>
-			{(user.username === post.author || user.role === "admin") && (
+			{editPermission && (
 				<div className="flex items-center justify-end gap-2 p-4">
 					<Link to={`/posts/${post.postId}/edit`}>
-					<Button  variant="secondary">
-						<Pencil />
-					</Button>
+						<Button variant="secondary">
+							<Pencil />
+						</Button>
 					</Link>
 					{/* <Button onClick={deletePost} variant="destructive">
 						<Trash2 variant="destructive" />
 					</Button> */}
 					<AlertDialog>
-					<AlertDialogTrigger asChild>
-						<Button variant="destructive"><Trash2 variant="destructive" /></Button>
-					</AlertDialogTrigger>
-					<AlertDialogContent>
-						<AlertDialogHeader>
-						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-						<AlertDialogDescription>
-							This action cannot be undone. This will permanently delete this
-							post and remove the data from our servers.
-						</AlertDialogDescription>
-						</AlertDialogHeader>
-						<AlertDialogFooter>
-						<AlertDialogCancel>Cancel</AlertDialogCancel>
-						<AlertDialogAction onClick={deletePost} variant="destructive" style={{ backgroundColor: 'red' }}>Continue</AlertDialogAction>
-						</AlertDialogFooter>
-					</AlertDialogContent>
+						<AlertDialogTrigger asChild>
+							<Button variant="destructive">
+								<Trash2 variant="destructive" />
+							</Button>
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>
+									Are you absolutely sure?
+								</AlertDialogTitle>
+								<AlertDialogDescription>
+									This action cannot be undone. This will
+									permanently delete this post and remove the
+									data from our servers.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction
+									onClick={deletePost}
+									variant="destructive"
+									style={{ backgroundColor: "red" }}
+								>
+									Continue
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
 					</AlertDialog>
 				</div>
 			)}

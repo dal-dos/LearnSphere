@@ -42,16 +42,6 @@ function Post() {
 	const { user } = useAuth();
 	const [post, setPost] = useState(null);
 	const [comment, setComment] = useState("");
-	const [hasPermissions, setPermissions] = useState(false);
-	const [hoveredCommentId, setHoveredCommentId] = useState(null);
-
-	const handleMouseEnter = (commentId) => {
-		setHoveredCommentId(commentId);
-	};
-
-	const handleMouseLeave = () => {
-		setHoveredCommentId(null);
-	};
 
 	useEffect(() => {
 		async function fetchPost() {
@@ -68,10 +58,6 @@ function Post() {
 			if (!fetchedPost) {
 				return;
 			}
-
-			setPermissions(
-				user.role === "admin" || fetchedPost.postedBy === user.username
-			);
 		}
 		fetchPost();
 	}, [getPostById, postSlug]);
@@ -104,18 +90,20 @@ function Post() {
 	};
 
 
-	const handleCommentChange = (e) => {
-		setComment(e.target.value);
-	};
-
 	const submitComment = async () => {
 		if (comment.trim()) {
 			try {
-				await handleAddComment(post.postId, comment);
+				const res = await handleAddComment(post.postId, comment);
+
+				if (!res.success) {
+					throw new Error(res.message);
+				}
+
 				setComment("");
-				toast({
-					title: "Comment added successfully",
-				});
+				setPost((prevPost) => ({
+					...prevPost,
+					comments: [...prevPost.comments, res.comment],
+				}));
 			} catch (error) {
 				console.error("Error adding comment:", error);
 				toast({
@@ -181,77 +169,63 @@ function Post() {
 			</CardContent>
 			<CardContent>
 				<Label className="mb-3 text-xl font-bold">Comments</Label>
-				<div>
-					{post.comments &&
-						Object.entries(post.comments).map(
-							([commentId, comment]) => (
-								<div
-									key={commentId}
-									className="relative mb-4 flex flex-col space-y-4 rounded-sm p-2 hover:bg-muted"
-									onMouseEnter={() =>
-										handleMouseEnter(commentId)
+
+				{post?.comments?.map((comm, index) => (
+					<div
+						key={index}
+						className="group relative mb-4 flex flex-col space-y-4 rounded-sm p-2 hover:bg-muted"
+					>
+						<div className="flex justify-between">
+							<span className="text-sm font-bold">
+								{user.username === comm.author ? (
+									<Link to="/profile">@{comm.author}</Link>
+								) : (
+									<Link to={`/users/${comm.author}`}>
+										@{comm.author}
+									</Link>
+								)}
+							</span>
+							<span className="text-sm">
+								{comm &&
+									new Date(
+										comm?.createdAt._seconds * 1000
+									).toLocaleString()}
+							</span>
+						</div>
+						<div className="relative flex items-center space-x-2">
+							<div className="w-full">{comm.comment}</div>
+
+							{(user.role === "admin" ||
+								user.username === comm.author) && (
+								<Button
+									onClick={() =>
+										handleDeleteComment(
+											post.postId,
+											comm.id
+										)
 									}
-									onMouseLeave={() =>
-										handleMouseLeave(commentId)
-									}
+									size="icon"
+									variant="ghost"
+									className="absolute bottom-0 right-0 hidden cursor-pointer text-sm group-hover:block"
 								>
-									<div className="flex justify-between">
-										<span className="text-sm font-bold">
-											{user.username ===
-											comment.author ? (
-												<Link to="/profile">
-													@{comment.author}
-												</Link>
-											) : (
-												<Link
-													to={`/users/${comment.author}`}
-												>
-													@{comment.author}
-												</Link>
-											)}
-										</span>
-										<span className="text-sm">
-											{new Date(
-												comment.createdAt._seconds *
-													1000
-											).toLocaleString()}
-										</span>
-									</div>
-									<div className="relative flex items-center space-x-2">
-										<div className="w-full">
-											{comment.comment}
-										</div>
-										{((hasPermissions &&
-											hoveredCommentId === commentId) ||
-											(user.username === comment.author &&
-												hoveredCommentId ===
-													commentId)) && (
-											<Button
-												onClick={() =>
-													handleDeleteComment(
-														post.postId,
-														commentId
-													)
-												}
-												size="icon"
-												variant="ghost"
-												className="absolute bottom-0 right-0 cursor-pointer text-sm"
-											>
-												<Trash2 color="red" />
-											</Button>
-										)}
-									</div>
-								</div>
-							)
-						)}
-				</div>
+									<Trash2 color="red" />
+								</Button>
+							)}
+						</div>
+					</div>
+				))}
 
 				<div className="flex w-full items-center space-x-2">
 					<Input
 						type="text"
 						placeholder="Write a comment..."
 						value={comment}
-						onChange={handleCommentChange}
+						onChange={(e) => setComment(e.target.value)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter") {
+								submitComment();
+							}
+						}}
 						className="w-full"
 					/>
 					<Button onClick={submitComment}>
@@ -259,7 +233,7 @@ function Post() {
 					</Button>
 				</div>
 			</CardContent>
-			{hasPermissions && (
+			{(user.username === post.author || user.role === "admin") && (
 				<div className="flex items-center justify-end gap-2 p-4">
 					<Link to={`/posts/${post.postId}/edit`}>
 					<Button  variant="secondary">

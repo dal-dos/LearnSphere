@@ -1,12 +1,11 @@
 import React, { createContext, useState, useEffect, useCallback } from "react";
 import { PROFILE_BASE_URL } from "../constants";
-import { useAuth, usePosts } from "@/hooks";
+import { useAuth } from "@/hooks";
 
 export const ProfileContext = createContext();
 
 const ProfileProvider = ({ children }) => {
 	const { isLoggedIn, getToken } = useAuth();
-	const { posts } = usePosts();
 	const [profile, setProfile] = useState(null);
 
 	useEffect(() => {
@@ -14,12 +13,11 @@ const ProfileProvider = ({ children }) => {
 			return;
 		}
 		async function fetchProfile() {
-			const tempProfile = await getProfile(`token=${getToken()}`);
-			setProfile(tempProfile);
-			console.log(tempProfile);
+			setProfile(await getProfile(`token=${getToken()}`));
 		}
-		
+
 		fetchProfile();
+		console.log("Profile is set to: ", profile);
 	}, [isLoggedIn, getToken]);
 
 	const getProfile = async (token) => {
@@ -38,7 +36,6 @@ const ProfileProvider = ({ children }) => {
 			const data = await response.json();
 
 			if (!data || data.success === false) {
-				console.log("getProfile() failed: ", data.message);
 				return null;
 			}
 
@@ -77,7 +74,7 @@ const ProfileProvider = ({ children }) => {
 		}
 	};
 
-	const createProfile = useCallback(async ({ name, username, role }) => {
+	const createProfile = async ({ name, username, role }) => {
 		try {
 			const response = await fetch(`${PROFILE_BASE_URL}/info`, {
 				method: "POST",
@@ -109,7 +106,7 @@ const ProfileProvider = ({ children }) => {
 				message: "Error during profile creation",
 			};
 		}
-	}, []);
+	};
 
 	const handleGetProfileById = async (userId) => {
 		try {

@@ -21,7 +21,7 @@ function Navigation() {
 		<nav className="flex w-full items-center justify-between p-2">
 			<NavLink className="" to="/">
 				<img
-					className="size-16"
+					className="size-16 min-w-16 p-3"
 					src="./assets/learnspherelogo.png"
 					alt="logo"
 				/>
